@@ -1,0 +1,11 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore IDE files
+.idea/*
+
+# Ignore dependency files
+node_modules/
+
+# Ignore build files
+target/

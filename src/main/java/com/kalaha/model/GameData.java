@@ -19,21 +19,49 @@ public class GameData {
     /**
      * The collection of pits on board.
      */
-    private List<Pit> pits = new ArrayList<>();
+    private List<Pit> pits;
 
     /**
      * The state of the game, e.g. whose turn, who won etc.
      */
-    private GameState gameState = GameState.TURN_P1;
+    private TurnInfo turnInfo;
 
+    private List<Violation> violationInfo;
+
+    private GameInfo gameInfo;
+
+    private PlayData playData;
+
+    private Player firstPlayer;
+
+    private Player secondPlayer;
 
     /**
      * The index of the pit where the last play finished.
      */
-    private int currentIndex = 0;
+    private int currentIndex;
+
+    public GameData(GameConfig gameConfig) {
+        pits = new ArrayList<>();
+        currentIndex = 0;
+        firstPlayer = new Player(0, gameConfig.getPlayer1Name());
+        secondPlayer = new Player(1, gameConfig.getPlayer2Name());
+        turnInfo = new TurnInfo(firstPlayer,secondPlayer);
+        violationInfo = new ArrayList<>();
+        gameInfo = new GameInfo(firstPlayer, secondPlayer);
+    }
+
+    public boolean addViolation(Violation violation) {
+        return violationInfo.add(violation);
+    }
+
+    public boolean hasRuleViolations() {
+        return !violationInfo.isEmpty();
+    }
 
     /**
      * Adds a pit to the list.
+     *
      * @param pit The pit to be added.
      * @return <code>true</code> if succeeds, otherwise <code>false</code>.
      */
@@ -43,45 +71,7 @@ public class GameData {
     }
 
 
-    /**
-     * TODO: Refactor this, possibly move to a util
-     * @param playData
-     * @return
-     */
-    public Pit getNextPit(PlayData playData) {
-        int playerId = playData.getPlayerID();
-        int indexSelectedPit = playData.getSelectedPit();
-
-        int nextIndex = indexSelectedPit + 1;
-        if (nextIndex >= pits.size()) {
-            nextIndex = 0;
-        }
-
-        Pit proposedPit = pits.get(nextIndex);
-        if (proposedPit instanceof Kalaha && proposedPit.getPlayer().getId() != playerId) {
-            PlayData newData = new PlayData();
-            newData.setSelectedPit(nextIndex + 1);
-            newData.setPlayerID(playData.getPlayerID());
-
-            return getNextPit(newData);
-        } else {
-            currentIndex = pits.indexOf(proposedPit) - 1;
-            return proposedPit;
-        }
-    }
-
-    /**
-     * TODO: Refactor this, possibly move to a util
-     * @param pit
-     * @return
-     */
-    public Pit getNextPit(Pit pit) {
-        int indexSelectedPit = pits.indexOf(pit);
-
-        PlayData playData = new PlayData();
-        playData.setSelectedPit(indexSelectedPit);
-        playData.setPlayerID(pit.getPlayer().getId());
-
-        return getNextPit(playData);
+    public void clearViolations() {
+        violationInfo.clear();
     }
 }

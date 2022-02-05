@@ -3,6 +3,7 @@ package com.kalaha.service;
 import com.kalaha.model.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -11,21 +12,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
 
+
     private static final GameService gameService = new GameService();
+    GameConfig gameConfig = new GameConfig("Player 1 name", "Player 2 name", 6,6, Collections.emptyList());
 
     @Test
     void newGameCreated() {
 
-        GameData returnedGameData = gameService.newGame();
+        GameData returnedGameData = gameService.newGame(gameConfig);
         assertNotNull(returnedGameData, "Game creation failed");
         assertEquals(0, returnedGameData.getCurrentIndex());
-        assertEquals(GameState.TURN_P1, returnedGameData.getGameState());
+        assertEquals(TurnInfo.TurnStatus.TURN_P1, returnedGameData.getTurnInfo().getTurnStatus());
     }
 
     @Test
     void newGameCreatedWithCorrectPitStructure() {
 
-        GameData returnedGameData = gameService.newGame();
+        GameData returnedGameData = gameService.newGame(gameConfig);
         List<Pit> returnedPits = returnedGameData.getPits();
 
         assertEquals(14, returnedPits.size());
@@ -40,7 +43,7 @@ class GameServiceTest {
     @Test
     void newGameCreatedWithCorrectKalahaData() {
 
-        GameData returnedGameData = gameService.newGame();
+        GameData returnedGameData = gameService.newGame(gameConfig);
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> kalahaList = returnedPits.stream().filter(pit -> pit instanceof Kalaha).collect(Collectors.toList());
 
@@ -60,7 +63,7 @@ class GameServiceTest {
     @Test
     void newGameCreatedWithCorrectPitData() {
 
-        GameData returnedGameData = gameService.newGame();
+        GameData returnedGameData = gameService.newGame(gameConfig);
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> pitList = returnedPits.stream().filter(pit -> !(pit instanceof Kalaha)).collect(Collectors.toList());
 
@@ -85,4 +88,5 @@ class GameServiceTest {
     @Test
     void getGame() {
     }
+
 }

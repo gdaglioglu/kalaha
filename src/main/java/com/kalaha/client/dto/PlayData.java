@@ -1,17 +1,15 @@
-package com.kalaha.model;
+package com.kalaha.client.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a turn on the board and contains/manages the related data.
+ * Client side POJO that holds a play data, e.g. selected pit and player who selected it.
  */
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class PlayData {
 
     /**

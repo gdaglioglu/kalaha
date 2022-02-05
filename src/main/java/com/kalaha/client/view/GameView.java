@@ -1,14 +1,16 @@
 package com.kalaha.client.view;
 
+import com.kalaha.client.dto.GameData;
+import com.kalaha.client.dto.Pit;
+import com.kalaha.client.dto.PlayData;
+import com.kalaha.client.dto.Player;
 import com.kalaha.client.service.RestClientService;
-import com.kalaha.model.GameData;
-import com.kalaha.model.Pit;
-import com.kalaha.model.PlayData;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,11 @@ import java.util.List;
  * browser tab/window.
  * TODO: Figure out what @PWA tag is really used for.
  */
+@PageTitle("Let's play!")
 @PWA(name = "Vaadin Application", shortName = "Vaadin App", description = "This is an example Vaadin application.", enableInstallPrompt = false)
 @Route("/kalaha")
 public class GameView extends HorizontalLayout {
 
-    private final Label player2Name;
-    private final Label player1Name;
     private final VerticalLayout boardLayout;
     private final HorizontalLayout pitBoardLayout;
     private final VerticalLayout pitLayout;
@@ -36,15 +37,24 @@ public class GameView extends HorizontalLayout {
     private final VerticalLayout kalaha2Layout;
     private final VerticalLayout kalaha1Layout;
     private final List<Button> buttonList = new ArrayList<>();
+    private final Player firstPlayer;
+    private final Player secondPlayer;
+
 
     /**
      * Constructs the game view.
+     *
      * @param service The service that enables client to consume web services.
      */
     public GameView(@Autowired RestClientService service) {
 
-        player2Name = new Label("Player 2 name");
-        player1Name = new Label("Player 1 name");
+        GameData gameData = service.getGameData();
+
+        firstPlayer = gameData.getFirstPlayer();
+        secondPlayer = gameData.getSecondPlayer();
+
+        Label player1Name = new Label(firstPlayer.getName());
+        Label player2Name = new Label(secondPlayer.getName());
 
         boardLayout = new VerticalLayout();
         boardLayout.setAlignItems(Alignment.CENTER);
@@ -63,15 +73,14 @@ public class GameView extends HorizontalLayout {
         boardLayout.add(player2Name, pitBoardLayout, player1Name);
         add(boardLayout);
 
-        GameData gameData = service.getGameData();
         List<Pit> pitList = gameData.getPits();
-
         addFirstPlayersPits(pitList, service);
         addSecondPlayersPits(pitList, service);
     }
 
     /**
      * TODO: To be refactored.
+     *
      * @param pitList
      * @param service
      */
@@ -83,7 +92,7 @@ public class GameView extends HorizontalLayout {
 
             PlayData playData = new PlayData();
             playData.setSelectedPit(i);
-            playData.setPlayerID(0);
+            playData.setPlayer(firstPlayer);
 
             Button button = new Button("" + pitList.get(i).getStones(),
                     e -> {
@@ -107,6 +116,7 @@ public class GameView extends HorizontalLayout {
 
     /**
      * TODO: To be refactored.
+     *
      * @param pitList
      * @param service
      */
@@ -119,7 +129,7 @@ public class GameView extends HorizontalLayout {
 
             PlayData playData = new PlayData();
             playData.setSelectedPit(i);
-            playData.setPlayerID(1);
+            playData.setPlayer(secondPlayer);
 
             Button button = new Button("" + pitList.get(i).getStones(),
                     e -> {
@@ -139,13 +149,14 @@ public class GameView extends HorizontalLayout {
         buttonList.add(kalaha2Button);
         kalaha2Layout.add(kalaha2Button);
 
-        for(int i = secondPlayersKalahaIndex -1; i > firstPlayersKalahaIndex; i--){
+        for (int i = secondPlayersKalahaIndex - 1; i > firstPlayersKalahaIndex; i--) {
             player2PitLayout.add(buttonList.get(i));
         }
     }
 
     /**
      * Refreshes game view after each turn.
+     *
      * @param gameData The data to be used to refresh the view.
      */
     private void refreshView(GameData gameData) {

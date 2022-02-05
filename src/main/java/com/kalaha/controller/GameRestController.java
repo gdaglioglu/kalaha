@@ -1,5 +1,6 @@
 package com.kalaha.controller;
 
+import com.kalaha.model.GameConfig;
 import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
 import com.kalaha.service.GameService;
@@ -37,9 +38,9 @@ public class GameRestController {
      * @return The representation of the game data.
      */
     @PostMapping("/game")
-    public GameData newGame() {
+    public GameData newGame(@RequestBody GameConfig gameConfig) {
 
-        return gameService.newGame();
+        return gameService.newGame(gameConfig);
     }
 
     /**

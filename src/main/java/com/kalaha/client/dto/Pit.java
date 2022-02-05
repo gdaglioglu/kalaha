@@ -1,16 +1,14 @@
-package com.kalaha.model;
+package com.kalaha.client.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a pit on the board and contains/manages the related data i.e. stones, player.
+ * Client side POJO that holds data for pits on the board i.e. stones, player.
  */
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Pit {
 

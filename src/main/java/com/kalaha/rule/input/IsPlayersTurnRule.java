@@ -20,7 +20,7 @@ public class IsPlayersTurnRule implements InputRule {
     @Override
     public void run(GameData gameData) {
 
-        Player playerToPlay = gameData.getTurnInfo().whoseTurn();
+        Player playerToPlay = gameData.getTurnInfo().getToPlay();
         PlayData playData = gameData.getPlayData();
 
         if (playData != null && !playData.getPlayer().equals(playerToPlay)) {

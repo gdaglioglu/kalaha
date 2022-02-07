@@ -36,6 +36,6 @@ public class DeterminePlayerTurnRule implements PlayRule {
             turnInfo.flipTurn();
         }
 
-        logger.info("Turn decision: {}", turnInfo.whoseTurn());
+        logger.info("Turn decision: {}", turnInfo.getToPlay());
     }
 }

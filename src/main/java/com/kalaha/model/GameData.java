@@ -16,6 +16,11 @@ import java.util.List;
 public class GameData {
 
     /**
+     * The id of the game data.
+     */
+    private Long id;
+
+    /**
      * The collection of pits on board.
      */
     private List<Pit> pits;
@@ -62,6 +67,7 @@ public class GameData {
      */
     public GameData(GameConfig gameConfig) {
 
+        id = 1L;
         pits = new ArrayList<>();
         currentIndex = 0;
         firstPlayer = new Player(0, gameConfig.getFirstPlayersName());
@@ -90,10 +96,7 @@ public class GameData {
             }
             pits.add(pit);
         }
-
-
     }
-
 
     /**
      * Adds the specified violation to the violation collection.

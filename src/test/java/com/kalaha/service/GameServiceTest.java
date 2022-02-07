@@ -1,94 +1,77 @@
 package com.kalaha.service;
 
 import com.kalaha.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
+/**
+ * Tests functionality exposed in {@link GameService} class.
+ */
+@ExtendWith(MockitoExtension.class)
 class GameServiceTest {
 
+    @Mock
+    private GameFactory mockGameFactory;
 
-    private static final GameService gameService = new GameService();
-    private Player firstPlayer = new Player(0,"Player 1 name");
-    private Player secondPlayer = new Player(0,"Player 2 name");
-    private GameConfig gameConfig = new GameConfig(firstPlayer.getName(), secondPlayer.getName(), 6, 6, Collections.emptyList());
+    @Mock
+    private GameData mockGameData;
+
+    @Mock
+    private KalahaGame mockGame;
+
+    @InjectMocks
+    private GameService gameService;
+
+    private final Player firstPlayer = new Player(0, "Player 1 name");
+    private final Player secondPlayer = new Player(0, "Player 2 name");
+    private final GameConfig gameConfig = new GameConfig(firstPlayer.getName(), secondPlayer.getName(), 6, 6, Collections.emptyList());
+
+    @BeforeEach
+    public void setUp() {
+        lenient().when(mockGameFactory.createGame(gameConfig)).thenReturn(mockGame);
+        lenient().when(mockGame.getGameData()).thenReturn(mockGameData);
+    }
 
     @Test
-    void newGameCreated() {
+    void newGameCreated_methodExecutionsVerified() {
 
         GameData returnedGameData = gameService.newGame(gameConfig);
-        assertNotNull(returnedGameData, "Game creation failed");
-        assertEquals(0, returnedGameData.getCurrentIndex());
-        assertEquals(firstPlayer, returnedGameData.getTurnInfo().whoseTurn());
+        assertEquals(mockGameData, returnedGameData);
     }
 
     @Test
-    void newGameCreatedWithCorrectPitStructure() {
+    void playInvoked_methodExecutionsVerified() {
 
-        GameData returnedGameData = gameService.newGame(gameConfig);
-        List<Pit> returnedPits = returnedGameData.getPits();
+        PlayData playData = new PlayData(0, firstPlayer);
+        when(mockGame.playTurn(playData)).thenReturn(mockGameData);
 
-        assertEquals(14, returnedPits.size());
-
-        List<Pit> pitList = returnedPits.stream().filter(pit -> !(pit instanceof Kalaha)).collect(Collectors.toList());
-
-        assertTrue(returnedPits.get(returnedPits.size() - 1) instanceof Kalaha, "Kalaha not found in expected index");
-        assertTrue(returnedPits.get(returnedPits.size() / 2 - 1) instanceof Kalaha, "Kalaha not found in expected index");
-        assertEquals(returnedPits.size() - 2, pitList.size());
+        gameService.newGame(gameConfig);
+        GameData returnedGameData = gameService.play(playData);
+        assertEquals(mockGameData, returnedGameData);
     }
 
     @Test
-    void newGameCreatedWithCorrectKalahaData() {
+    void getGame_gameIsNotInitialized() {
 
-        GameData returnedGameData = gameService.newGame(gameConfig);
-        List<Pit> returnedPits = returnedGameData.getPits();
-        List<Pit> kalahaList = returnedPits.stream().filter(pit -> pit instanceof Kalaha).collect(Collectors.toList());
-
-        Kalaha firstPlayersKalaha = (Kalaha) kalahaList.get(0);
-        Kalaha secondPlayersKalaha = (Kalaha) kalahaList.get(1);
-
-        Player firstPlayer = new Player(0, "Player 1");
-        Player secondPlayer = new Player(1, "Player 2");
-
-        assertEquals(firstPlayer, firstPlayersKalaha.getPlayer());
-        assertEquals(0, firstPlayersKalaha.getStones());
-
-        assertEquals(secondPlayer, secondPlayersKalaha.getPlayer());
-        assertEquals(0, secondPlayersKalaha.getStones());
+        GameData returnedGameData = gameService.getGame();
+        assertNull(returnedGameData);
     }
 
     @Test
-    void newGameCreatedWithCorrectPitData() {
+    void getGame_gameIsInitialized() {
 
-        GameData returnedGameData = gameService.newGame(gameConfig);
-        List<Pit> returnedPits = returnedGameData.getPits();
-        List<Pit> pitList = returnedPits.stream().filter(pit -> !(pit instanceof Kalaha)).collect(Collectors.toList());
-
-        List<Pit> pitsWithDefaultNumberOfStones = pitList.stream().filter(pit -> pit.getStones() == 6).collect(Collectors.toList());
-        assertEquals(pitList.size(), pitsWithDefaultNumberOfStones.size());
-
-        Player firstPlayer = new Player(0, "Player 1");
-        Player secondPlayer = new Player(1, "Player 2");
-
-        List<Pit> firstPlayersPits = IntStream.range(0, pitList.size() / 2 - 1).mapToObj(i -> pitList.get(i)).collect(Collectors.toList());
-        assertEquals(firstPlayersPits.size(), firstPlayersPits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).count());
-
-        List<Pit> secondPlayersPits = IntStream.range(pitList.size() / 2, pitList.size()).mapToObj(i -> pitList.get(i)).collect(Collectors.toList());
-        assertEquals(secondPlayersPits.size(), secondPlayersPits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).count());
+        gameService.newGame(gameConfig);
+        GameData returnedGameData = gameService.getGame();
+        assertEquals(mockGameData, returnedGameData);
     }
-
-    @Test
-    void play() {
-
-    }
-
-    @Test
-    void getGame() {
-    }
-
 }

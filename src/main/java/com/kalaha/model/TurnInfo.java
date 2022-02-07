@@ -8,10 +8,10 @@ import lombok.ToString;
  * Holds turn information in the game.
  */
 @NoArgsConstructor
-@Getter
 @ToString
 public class TurnInfo {
 
+    @Getter
     private Player toPlay;
     private Player firstPlayer;
     private Player secondPlayer;
@@ -37,13 +37,5 @@ public class TurnInfo {
         } else if (secondPlayer.equals(toPlay)) {
             toPlay = firstPlayer;
         }
-    }
-
-    /**
-     * Retrives the player to play next.
-     * @return the player reference.
-     */
-    public Player whoseTurn() {
-        return toPlay;
     }
 }

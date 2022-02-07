@@ -33,11 +33,11 @@ class DeterminePlayerTurnRuleTest {
         playData.setPlayer(firstPlayer);
 
         TurnInfo turnInfo = gameData.getTurnInfo();
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
     }
 
     @Test
@@ -47,11 +47,11 @@ class DeterminePlayerTurnRuleTest {
         playData.setPlayer(firstPlayer);
 
         TurnInfo turnInfo = gameData.getTurnInfo();
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
     }
 
     @Test
@@ -61,11 +61,11 @@ class DeterminePlayerTurnRuleTest {
         playData.setPlayer(firstPlayer);
 
         TurnInfo turnInfo = gameData.getTurnInfo();
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
     }
 
     @Test
@@ -76,11 +76,11 @@ class DeterminePlayerTurnRuleTest {
 
         TurnInfo turnInfo = gameData.getTurnInfo();
         turnInfo.flipTurn();
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
     }
 
     @Test
@@ -91,11 +91,11 @@ class DeterminePlayerTurnRuleTest {
 
         TurnInfo turnInfo = gameData.getTurnInfo();
         turnInfo.flipTurn();
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
     }
 
     @Test
@@ -106,11 +106,11 @@ class DeterminePlayerTurnRuleTest {
 
         TurnInfo turnInfo = gameData.getTurnInfo();
         turnInfo.flipTurn();
-        assertEquals(secondPlayer, turnInfo.whoseTurn());
+        assertEquals(secondPlayer, turnInfo.getToPlay());
 
         determinePlayerTurnRule.run(gameData);
 
-        assertEquals(firstPlayer, turnInfo.whoseTurn());
+        assertEquals(firstPlayer, turnInfo.getToPlay());
     }
 
 }

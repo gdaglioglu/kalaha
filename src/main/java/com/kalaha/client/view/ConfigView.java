@@ -2,6 +2,8 @@ package com.kalaha.client.view;
 
 import com.kalaha.client.dto.GameConfig;
 import com.kalaha.client.service.RestClientService;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -41,52 +43,20 @@ public class ConfigView extends VerticalLayout {
 
     /**
      * Constructs configuration view page.
+     *
      * @param service the client service to initiate REST calls.
      */
     public ConfigView(@Autowired RestClientService service) {
 
         H3 gameConfiguration = new H3("Game configuration");
 
-        TextField firstPlayersNameField = new TextField();
-        firstPlayersNameField.setMaxLength(100);
-        firstPlayersNameField.setWidthFull();
+        TextField firstPlayersNameField = getPlayersNameField();
+        TextField secondPlayersNameField = getPlayersNameField();
 
-        TextField secondPlayersNameField = new TextField();
-        secondPlayersNameField.setMaxLength(100);
-        secondPlayersNameField.setWidthFull();
+        IntegerField numberOfPitsPerPlayerField = getIntegerField();
+        IntegerField numberOfStonesPerPitField = getIntegerField();
 
-        IntegerField numberOfPitsPerPlayerField = new IntegerField();
-        numberOfPitsPerPlayerField.setWidthFull();
-        numberOfPitsPerPlayerField.setMin(1);
-        numberOfPitsPerPlayerField.setMax(10);
-        numberOfPitsPerPlayerField.setValue(6);
-        numberOfPitsPerPlayerField.setHasControls(true);
-
-        IntegerField numberOfStonesPerPitField = new IntegerField();
-        numberOfStonesPerPitField.setWidthFull();
-        numberOfStonesPerPitField.setMin(1);
-        numberOfStonesPerPitField.setMax(10);
-        numberOfStonesPerPitField.setValue(6);
-        numberOfStonesPerPitField.setHasControls(true);
-
-        Button submitButton = new Button("Start", e -> {
-
-            String firstPlayersName = firstPlayersNameField.getValue();
-            String secondPlayersName = secondPlayersNameField.getValue();
-
-            if(firstPlayersName.isEmpty() || secondPlayersName.isEmpty()){
-                Notification notification = Notification.show("Enter user names to start!");
-                logger.error("Player names not entered");
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                return;
-            }
-            GameConfig gameConfig = new GameConfig(firstPlayersName, secondPlayersName,
-                    numberOfPitsPerPlayerField.getValue(), numberOfStonesPerPitField.getValue());
-
-            service.createGame(gameConfig);
-
-            UI.getCurrent().navigate(GameView.class);
-        });
+        Button submitButton = new Button("Start", getStartButtonListener(service, firstPlayersNameField, secondPlayersNameField, numberOfPitsPerPlayerField, numberOfStonesPerPitField));
         submitButton.addClickShortcut(Key.ENTER);
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         submitButton.setWidth(PX_250);
@@ -102,5 +72,66 @@ public class ConfigView extends VerticalLayout {
         setHorizontalComponentAlignment(Alignment.CENTER, gameConfiguration, formLayout, submitButton);
 
         logger.debug("Config view initialized");
+    }
+
+    /**
+     * Gets an {@link IntegerField} after setting common attributes.
+     * @return the customised integer field.
+     */
+    private IntegerField getIntegerField() {
+        IntegerField integerField = new IntegerField();
+        integerField.setWidthFull();
+        integerField.setMin(1);
+        integerField.setMax(10);
+        integerField.setValue(6);
+        integerField.setHasControls(true);
+        return integerField;
+    }
+
+    /**
+     * Gets an {@link TextField} after setting common attributes.
+     * @return the customised text field.
+     */
+    private TextField getPlayersNameField() {
+        TextField textField = new TextField();
+        textField.setMaxLength(100);
+        textField.setWidthFull();
+        return textField;
+    }
+
+    /**
+     * Once clicked, this button will trigger:
+     * <ul>
+     *     <li>A validation that enforces player names to be entered</li>
+     *     <li>A REST call to create game</li>
+     *     <li>A page redirect to game view</li>
+     * </ul>
+     *
+     * @param service                    the service to communicate REST APIs.
+     * @param firstPlayersNameField      first player's name text field
+     * @param secondPlayersNameField     second player's name text field
+     * @param numberOfPitsPerPlayerField the number of pits per player field
+     * @param numberOfStonesPerPitField  the number of stones per pit field
+     * @return the custom event listener to be attached to the button.
+     */
+    private ComponentEventListener<ClickEvent<Button>> getStartButtonListener(RestClientService service, TextField firstPlayersNameField, TextField secondPlayersNameField, IntegerField numberOfPitsPerPlayerField, IntegerField numberOfStonesPerPitField) {
+        return e -> {
+
+            String firstPlayersName = firstPlayersNameField.getValue();
+            String secondPlayersName = secondPlayersNameField.getValue();
+
+            if (firstPlayersName.isEmpty() || secondPlayersName.isEmpty()) {
+                Notification notification = Notification.show("Enter user names to start!");
+                logger.error("Player names not entered");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
+            GameConfig gameConfig = new GameConfig(firstPlayersName, secondPlayersName,
+                    numberOfPitsPerPlayerField.getValue(), numberOfStonesPerPitField.getValue());
+
+            service.createGame(gameConfig);
+
+            UI.getCurrent().navigate(GameView.class);
+        };
     }
 }

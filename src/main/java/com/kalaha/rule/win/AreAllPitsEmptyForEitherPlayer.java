@@ -53,6 +53,7 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
             Pit lostUsersKalaha = gameData.getPits().stream().filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playerWithStonesLeft)).findFirst().get();
             gameData.getPits().stream().filter(pit -> !(pit instanceof Kalaha) && pit.getPlayer().equals(playerWithStonesLeft)).forEach(pit -> pit.setStones(0));
             lostUsersKalaha.setStones(lostUsersKalaha.getStones() + playersKalahaCount.get(playerWithStonesLeft));
+            //Game winner must be set in here!!
 
             logger.info("Game completed - Winner: {}", winner);
         }

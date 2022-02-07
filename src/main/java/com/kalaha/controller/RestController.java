@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
  * Rest controller that exposes APIs to control game logic.
  */
 @org.springframework.web.bind.annotation.RestController
+@RequestMapping("/game")
 public class RestController {
 
     /**
@@ -38,13 +39,13 @@ public class RestController {
     }
 
     /**
-     * TODO: Review GameData to see whether we send all relevant data
      * Creates a new game.
      *
      * @param gameConfig the config to be used in game creation.
      * @return the representation of the game data.
      */
-    @PostMapping("/game")
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public GameData newGame(@RequestBody GameConfig gameConfig) {
 
         GameData gameData = gameService.newGame(gameConfig);
@@ -58,7 +59,7 @@ public class RestController {
      *
      * @return the representation of the game data.
      */
-    @GetMapping("/game")
+    @GetMapping()
     public GameData getGame() {
 
         GameData gameData = gameService.getGame();
@@ -77,7 +78,8 @@ public class RestController {
      *
      * @return the representation of the game data.
      */
-    @PutMapping(value = "/game")
+    @PutMapping()
+    @ResponseStatus(HttpStatus.OK)
     public GameData play(@RequestBody PlayData input) {
 
         GameData gameData = gameService.play(input);

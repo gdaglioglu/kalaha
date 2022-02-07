@@ -27,7 +27,7 @@ class IsPlayersTurnRuleTest {
     @Test
     public void isPlayersTurn() {
 
-        assertEquals(firstPlayer, gameData.getTurnInfo().whoseTurn());
+        assertEquals(firstPlayer, gameData.getTurnInfo().getToPlay());
 
         PlayData playData = gameData.getPlayData();
         playData.setPlayer(firstPlayer);
@@ -40,7 +40,7 @@ class IsPlayersTurnRuleTest {
     @Test
     public void isNotPlayersTurn() {
 
-        assertEquals(firstPlayer, gameData.getTurnInfo().whoseTurn());
+        assertEquals(firstPlayer, gameData.getTurnInfo().getToPlay());
 
         PlayData playData = gameData.getPlayData();
         playData.setPlayer(secondPlayer);

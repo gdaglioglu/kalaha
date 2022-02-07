@@ -3,20 +3,10 @@ package com.kalaha.service;
 import com.kalaha.model.GameConfig;
 import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
-import com.kalaha.rule.GameRule;
-import com.kalaha.rule.input.IsGameOngoingRule;
-import com.kalaha.rule.input.IsPlayersTurnRule;
-import com.kalaha.rule.input.IsValidPitRule;
-import com.kalaha.rule.play.CollectStonesFromOppositePitRule;
-import com.kalaha.rule.play.DeterminePlayerTurnRule;
-import com.kalaha.rule.play.DistributeStonesRule;
-import com.kalaha.rule.win.AreAllPitsEmptyForEitherPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The service that manages the creation and play of the game.
@@ -32,7 +22,22 @@ public class GameService {
     /**
      * The reference to the game.
      */
-    private KalahaGame game;
+    private Game game;
+
+    /**
+     * Factory class to used to create games.
+     */
+    private final GameFactory gameFactory;
+
+    /**
+     * Constructor for this service.
+     * @param gameFactory the factory to create games.
+     */
+    @Autowired
+    public GameService(GameFactory gameFactory) {
+
+        this.gameFactory = gameFactory;
+    }
 
     /**
      * Creates a new kalaha game.
@@ -41,20 +46,7 @@ public class GameService {
      */
     public GameData newGame(GameConfig gameConfig) {
 
-        List<GameRule> rules = new ArrayList<>();
-        rules.add(new IsGameOngoingRule());
-        rules.add(new IsPlayersTurnRule());
-        rules.add(new IsValidPitRule());
-
-        rules.add(new DistributeStonesRule());
-        rules.add(new CollectStonesFromOppositePitRule());
-        rules.add(new DeterminePlayerTurnRule());
-
-        rules.add(new AreAllPitsEmptyForEitherPlayer());
-
-        gameConfig.setRules(rules);
-
-        game = new KalahaGame(gameConfig);
+        game = gameFactory.createGame(gameConfig);
         GameData gameData = game.getGameData();
         logger.debug("Game retrieved: {}", gameData);
 

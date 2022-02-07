@@ -17,6 +17,11 @@ import java.util.List;
 public class GameData {
 
     /**
+     * The id of the game data.
+     */
+    private Long id;
+
+    /**
      * The collection of pits on board.
      */
     private List<Pit> pits;

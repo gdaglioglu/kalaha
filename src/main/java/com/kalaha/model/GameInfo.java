@@ -3,7 +3,7 @@ package com.kalaha.model;
 import lombok.Getter;
 
 /**
- * TODO
+ * POJO that holds game status and winner player information.
  */
 public class GameInfo {
 
@@ -17,7 +17,7 @@ public class GameInfo {
         gameStatus = GameStatus.ONGOING;
     }
 
-    public void establishWinner(Player player) {
+    public void setWinner(Player player) {
         winner = player;
         gameStatus = GameStatus.FINISHED;
     }

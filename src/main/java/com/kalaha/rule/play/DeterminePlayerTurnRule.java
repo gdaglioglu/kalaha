@@ -4,8 +4,14 @@ import com.kalaha.model.*;
 
 import java.util.List;
 
+/**
+ * Rule implementation to determine which user to play next.
+ */
 public class DeterminePlayerTurnRule implements PlayRule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(GameData gameData) {
 
@@ -15,8 +21,7 @@ public class DeterminePlayerTurnRule implements PlayRule {
 
         PlayData playData = gameData.getPlayData();
 
-        if (!(lastPlayedPit != null &&
-                lastPlayedPit instanceof Kalaha &&
+        if (!(lastPlayedPit instanceof Kalaha &&
                 lastPlayedPit.getPlayer().equals(playData.getPlayer()))) {
 
             TurnInfo turnInfo = gameData.getTurnInfo();

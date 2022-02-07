@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Represents game states like turns and wins.
+ * Holds turn information in the game.
  */
 @NoArgsConstructor
 @Getter
@@ -14,12 +14,20 @@ public class TurnInfo {
     private Player firstPlayer;
     private Player secondPlayer;
 
+    /**
+     * Constructs a turn info.
+     * @param firstPlayer the reference to the first player.
+     * @param secondPlayer the reference to the second player.
+     */
     public TurnInfo(Player firstPlayer, Player secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.toPlay = firstPlayer;
     }
 
+    /**
+     * Flips the turn to the other player.
+     */
     public void flipTurn() {
 
         if (firstPlayer.equals(toPlay)) {
@@ -29,6 +37,10 @@ public class TurnInfo {
         }
     }
 
+    /**
+     * Retrives the player to play next.
+     * @return the player reference.
+     */
     public Player whoseTurn() {
         return toPlay;
     }

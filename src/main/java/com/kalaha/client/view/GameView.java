@@ -73,6 +73,11 @@ public class GameView extends VerticalLayout {
         addPlayerPits(gameData, service);
     }
 
+    /**
+     * Adds pits for players to the view.
+     * @param gameData the representation of the game data.
+     * @param service the client service to invoke REST APIs.
+     */
     private void addPlayerPits(GameData gameData, RestClientService service) {
 
         List<Pit> pits = gameData.getPits();

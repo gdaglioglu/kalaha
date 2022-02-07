@@ -12,9 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GameInfo {
 
-    @Getter
+    /**
+     * The game status.
+     */
     private GameStatus gameStatus;
 
-    @Getter
+    /**
+     * The player who won the game.
+     */
     private Player winner;
 }

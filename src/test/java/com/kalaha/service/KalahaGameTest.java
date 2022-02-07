@@ -51,7 +51,7 @@ class KalahaGameTest {
     @Test
     void newGameCreated() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.postPlay();
         assertNotNull(returnedGameData, "Game creation failed");
         assertEquals(0, returnedGameData.getCurrentIndex());
         assertEquals(GameStatus.ONGOING, returnedGameData.getGameInfo().getGameStatus());
@@ -63,7 +63,7 @@ class KalahaGameTest {
     @Test
     void newGameCreatedWithCorrectPitStructure() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.postPlay();
         List<Pit> returnedPits = returnedGameData.getPits();
 
         assertEquals(14, returnedPits.size());
@@ -78,7 +78,7 @@ class KalahaGameTest {
     @Test
     void newGameCreatedWithCorrectKalahaData() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.postPlay();
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> kalahaList = returnedPits.stream().filter(pit -> pit instanceof Kalaha).collect(Collectors.toList());
 
@@ -98,7 +98,7 @@ class KalahaGameTest {
     @Test
     void newGameCreatedWithCorrectPitData() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.postPlay();
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> pitList = returnedPits.stream().filter(pit -> !(pit instanceof Kalaha)).collect(Collectors.toList());
 
@@ -120,7 +120,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(0, player1);
 
-        kalahaGameWith6StonesIn6Pits.getGameData();
+        kalahaGameWith6StonesIn6Pits.postPlay();
         GameData gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
         List<Pit> pits = gameData.getPits();
@@ -147,7 +147,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(5, player1);
 
-        kalahaGameWith6StonesIn6Pits.getGameData();
+        kalahaGameWith6StonesIn6Pits.postPlay();
         GameData gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
         List<Pit> pits = gameData.getPits();
@@ -174,7 +174,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(8, player2);
 
-        GameData gameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData gameData = kalahaGameWith6StonesIn6Pits.postPlay();
         gameData.getTurnInfo().flipTurn();
         gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
@@ -201,7 +201,7 @@ class KalahaGameTest {
     void playForPlayer2AndPit1() {
 
         PlayData playData = new PlayData(7, player2);
-        GameData gameData = kalahaGameWith6StonesIn6Pits.getGameData();
+        GameData gameData = kalahaGameWith6StonesIn6Pits.postPlay();
         gameData.getTurnInfo().flipTurn();
         gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 

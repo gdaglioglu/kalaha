@@ -6,8 +6,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Rule implementation to check if game is finished and establish winner.
+ */
 public class AreAllPitsEmptyForEitherPlayer implements WinRule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(GameData gameData) {
 
@@ -34,7 +40,7 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
             Player playerWithStonesLeft = Collections.max(playersPitCount.entrySet(), Map.Entry.comparingByValue()).getKey();
             playersKalahaCount.put(playerWithStonesLeft, playersPitCount.get(playerWithStonesLeft));
             Player winner = Collections.max(playersKalahaCount.entrySet(), Map.Entry.comparingByValue()).getKey();
-            gameData.getGameInfo().establishWinner(winner);
+            gameData.getGameInfo().setWinner(winner);
 
             // Set lost user's kalaha stones in game state
             Pit lostUsersKalaha = gameData.getPits().stream().filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playerWithStonesLeft)).findFirst().get();

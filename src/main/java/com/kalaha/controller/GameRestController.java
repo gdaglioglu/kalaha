@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * TODO: HATEOS metadata.
  * Rest controller that exposes APIs to control game logic.
  */
 @RestController
@@ -33,11 +32,10 @@ public class GameRestController {
 
     /**
      * TODO: Review GameData to see whether we send all relevant data
-     * Creates a new game.<p/>
-     *       Do we really need to expose this API?
-     * Maps a POST to /game endpoint.
+     * Creates a new game.
      *
-     * @return The representation of the game data.
+     * @param gameConfig the config to be used in game creation.
+     * @return the representation of the game data.
      */
     @PostMapping("/game")
     public GameData newGame(@RequestBody GameConfig gameConfig) {
@@ -47,28 +45,26 @@ public class GameRestController {
 
     /**
      * TODO: Review GameData to see whether we send all relevant data.
-     * Creates a new game.<p/>
-     * Maps a GET to /game endpoint.
+     * Retrieves the game data<p/>
      *
-     * @return The representation of the game data.
+     * @return the representation of the game data.
      */
     @GetMapping("/game")
     public GameData getGame() {
+
         GameData game = gameService.getGame();
 
-        if(game == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game is not initialized, please go to /createGame page");
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game is not initialized, please create a game first");
         }
 
         return game;
     }
 
     /**
-     * TODO: Replace GameData with a POJO to break dependency between client and server.
-     * Initiates a move by either of the players.<p/>
-     * Maps a PUT to /game endpoint.
+     * Initiates a move by either of the players.
      *
-     * @return The representation of the game data.
+     * @return the representation of the game data.
      */
     @PutMapping(value = "/game")
     public GameData play(@RequestBody PlayData input) {

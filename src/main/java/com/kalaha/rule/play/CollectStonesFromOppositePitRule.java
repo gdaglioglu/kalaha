@@ -5,8 +5,14 @@ import com.kalaha.util.PitUtil;
 
 import java.util.List;
 
+/**
+ * Rule implementation for a user to collect opponent's stones and move them to their kalaha.
+ */
 public class CollectStonesFromOppositePitRule implements PlayRule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(GameData gameData) {
 

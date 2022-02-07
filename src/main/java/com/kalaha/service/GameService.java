@@ -23,7 +23,7 @@ import java.util.List;
 public class GameService {
 
     /**
-     * The reference to the kalaha game.
+     * The reference to the game.
      */
     private KalahaGame game;
 
@@ -63,7 +63,6 @@ public class GameService {
     }
 
     /**
-     * TODO: Don't return if game is not created yet.
      * Retrieves the game data.
      *
      * @return the data that represents the game.

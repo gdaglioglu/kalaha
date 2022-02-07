@@ -4,10 +4,17 @@ import com.kalaha.model.*;
 
 import java.util.List;
 
+/**
+ * Utility class to navigate through pits.
+ */
 public class PitUtil {
 
     /**
-     * TODO:
+     * Returns the next appropriate pit for a given pit and player.
+     *
+     * @param gameData the representation of game data.
+     * @param pit      the pit that is asked the next pit for.
+     * @return the next appropriate pit.
      */
     public static Pit getNextPit(GameData gameData, Pit pit) {
 
@@ -32,7 +39,12 @@ public class PitUtil {
         }
     }
 
-    // TODO: check how can we control if given pit is kalaha, error case
+    /**
+     * Returns the opposite pit for a given pit and player.
+     * TODO: check how can we control if given pit is kalaha, error case
+     * @param gameData the representation of game data.
+     * @return the opposite pit.
+     */
     public static Pit getOppositePit(GameData gameData) {
 
         List<Pit> pits = gameData.getPits();
@@ -40,6 +52,4 @@ public class PitUtil {
         int indexOfOppositePit = (pits.size() - 2) - currentIndex;
         return pits.get(indexOfOppositePit);
     }
-
-
 }

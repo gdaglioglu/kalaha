@@ -12,5 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TurnInfo {
 
+    /**
+     * The player who is supposed to play.
+     */
     private Player toPlay;
 }

@@ -5,7 +5,6 @@ import com.kalaha.client.dto.GameData;
 import com.kalaha.client.dto.PlayData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -13,9 +12,8 @@ import java.io.Serializable;
 
 /**
  * The service that allows client to consume rest apis.
- * {@link #getGameData()} and {@link #sendPlayData(PlayData)} uses a DTO class to map the JSON results from API.
+ * {@link #createGame(GameConfig)}, {@link #getGameData()} and {@link #sendPlayData(PlayData)} uses a DTO class to map the JSON results from API.
  * It fetches all available results immediately.
- * <p>
  */
 @Service
 public class RestClientService implements Serializable {
@@ -26,10 +24,13 @@ public class RestClientService implements Serializable {
     @Value("${server.port}")
     private String serverPort;
 
-
+    /**
+     * Initiates a request to the relevant REST API to create a game.
+     *
+     * @param gameConfig the game configuration parameters.
+     * @return the representation of the created game.
+     */
     public GameData createGame(GameConfig gameConfig) {
-
-        System.out.println("Creating game data through REST..");
 
         final WebClient.RequestHeadersSpec<?> spec = WebClient.create().post()
                 .uri("http://localhost:" + serverPort + "/game").body(Mono.just(gameConfig), GameConfig.class);
@@ -39,10 +40,9 @@ public class RestClientService implements Serializable {
     }
 
     /**
-     * Fetches data that represents the game.
-     * Remove system outs, add proper logging mechanism. Look into error handling.
+     * Initiates a request to the relevant REST API to retrieve game data.
      *
-     * @return The game data.
+     * @return the representation of the created game.
      */
     public GameData getGameData() {
 
@@ -57,16 +57,12 @@ public class RestClientService implements Serializable {
 
 
     /**
-     * Sends data that represents a turn in the game. Then retrieves the updated game data.
-     * Remove system outs, add proper logging mechanism. Look into error handling.
+     * Initiates a request to the relevant REST API to send play data.
      *
-     * @param playData
-     * The data represents a turn.
-     * @return The game data.
+     * @param playData The data that represents a turn.
+     * @return the representation of the created game.
      */
     public GameData sendPlayData(PlayData playData) {
-
-        System.out.println("sending play data...");
 
         final WebClient.RequestHeadersSpec<?> spec = WebClient.create().put()
                 .uri("http://localhost:" + serverPort + "/game").body(Mono.just(playData), PlayData.class);

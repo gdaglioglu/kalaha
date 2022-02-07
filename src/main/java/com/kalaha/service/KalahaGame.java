@@ -4,13 +4,14 @@ import com.kalaha.model.*;
 import com.kalaha.rule.input.InputRule;
 import com.kalaha.rule.play.PlayRule;
 import com.kalaha.rule.win.WinRule;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Game rules and win rules are to be incorporated. Just a very basic scenario works for now.
- * Holds the specific Kalaha game logic.
+ * Represents a kalaha game.
  */
+@Getter
 public class KalahaGame extends Game {
 
     /**
@@ -18,24 +19,26 @@ public class KalahaGame extends Game {
      */
     public static final Logger logger = LoggerFactory.getLogger(KalahaGame.class);
 
-
     /**
-     * Any specific data about the game.
+     * Anything about game state.
      */
     private final GameData gameData;
 
     /**
      * Constructs a basic Kalaha game.
      *
-     * @param gameConfig pit, stone and user configuration data.
+     * @param gameConfig the configuration data to base the game on.
      */
     protected KalahaGame(GameConfig gameConfig) {
         super(gameConfig);
         this.gameData = new GameData(gameConfig);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void validate(PlayData playData) {
+    protected void prePlay(PlayData playData) {
 
         gameData.clearViolations();
         gameData.setPlayData(playData);
@@ -44,9 +47,7 @@ public class KalahaGame extends Game {
     }
 
     /**
-     *TODO:????
-     * @param playData the turn data.
-     * @return the updated game data after turn.
+     * {@inheritDoc}
      */
     @Override
     public void play(PlayData playData) {
@@ -58,8 +59,11 @@ public class KalahaGame extends Game {
         getGameRules().stream().filter(rule -> rule instanceof PlayRule).forEach(rule -> rule.run(gameData));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected GameData getGameData() {
+    protected GameData postPlay() {
 
         if (gameData.hasRuleViolations()) {
             return gameData;

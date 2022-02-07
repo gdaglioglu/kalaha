@@ -27,8 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Theme(value = Lumo.class)
 public class ConfigView extends VerticalLayout {
 
+    /**
+     * Constant for width of the form.
+     */
     public static final String PX_250 = "250px";
 
+    /**
+     * Constructs configuration view page.
+     * @param service the client service to initiate REST calls.
+     */
     public ConfigView(@Autowired RestClientService service) {
 
         H3 gameConfiguration = new H3("Game configuration");
@@ -57,7 +64,6 @@ public class ConfigView extends VerticalLayout {
 
         Button submitButton = new Button("Start", e -> {
 
-
             String firstPlayersName = firstPlayersNameField.getValue();
             String secondPlayersName = secondPlayersNameField.getValue();
 
@@ -73,7 +79,6 @@ public class ConfigView extends VerticalLayout {
 
             UI.getCurrent().navigate(GameView.class);
         });
-
         submitButton.addClickShortcut(Key.ENTER);
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         submitButton.setWidth(PX_250);

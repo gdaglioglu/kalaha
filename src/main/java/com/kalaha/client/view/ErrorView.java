@@ -12,13 +12,16 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 /**
- * Custom error page to be displayed in case of an error occurs, e.g. display game page is requested before creating the game etc..
+ * Custom error page to be displayed in case of an error occurs, e.g. display game page is requested before creating the game etc.
  */
 @PageTitle("Error occurred!")
 @Route("/error")
 @Theme(value = Lumo.class)
 public class ErrorView extends HorizontalLayout {
 
+    /**
+     * Constructor for the custom error page.
+     */
     public ErrorView() {
 
         VerticalLayout layout = new VerticalLayout();

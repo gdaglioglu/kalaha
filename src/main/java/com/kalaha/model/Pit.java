@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a pit on the board and contains/manages the related data i.e. stones, player.
+ * Represents a pit on the board and contains/manages the related data.
  */
 @Getter
 @Setter

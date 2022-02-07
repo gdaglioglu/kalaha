@@ -7,8 +7,14 @@ import com.kalaha.util.PitUtil;
 
 import java.util.List;
 
+/**
+ * Rule implementation to distribute stones to appropriate pits.
+ */
 public class DistributeStonesRule implements PlayRule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(GameData gameData) {
 

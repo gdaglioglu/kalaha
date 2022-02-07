@@ -16,8 +16,15 @@ public enum Violation {
     NON_EXISTING_PIT("Selected pit index does not exist!"),
     GAME_ALREADY_OVER("Game is over, start a new game to play!");
 
+    /**
+     * The message associated with violation.
+     */
     private String message;
 
+    /**
+     * Constructs a violation.
+     * @param message the message associated with violation.
+     */
     Violation(String message) {
         this.message = message;
     }

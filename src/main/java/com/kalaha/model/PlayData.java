@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a turn on the board and contains/manages the related data.
+ * Represents a turn in the game and contains/manages the related data.
  */
 @Getter
 @Setter

@@ -37,7 +37,7 @@ class IsGameOngoingRuleTest {
     @Test
     public void gameIsFinished() {
 
-        gameData.getGameInfo().establishWinner(firstPlayer);
+        gameData.getGameInfo().setWinner(firstPlayer);
         assertEquals(GameStatus.FINISHED, gameData.getGameInfo().getGameStatus());
 
         isGameOngoingRule.run(gameData);

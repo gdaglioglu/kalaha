@@ -2,8 +2,14 @@ package com.kalaha.rule.input;
 
 import com.kalaha.model.*;
 
+/**
+ * Rule implementation for checking a user can only play using their own pits that have stones.
+ */
 public class IsValidPitRule implements InputRule {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(GameData gameData) {
 

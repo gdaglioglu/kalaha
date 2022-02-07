@@ -14,7 +14,7 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
         Map<Player, Integer> playersPitCount = new HashMap<>();
         Map<Player, Integer> playersKalahaCount = new HashMap<>();
 
-        gameData.getPits().stream().forEach(pit -> {
+        gameData.getPits().forEach(pit -> {
 
             Player player = pit.getPlayer();
 
@@ -29,12 +29,17 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
 
         if (playersPitCount.containsValue(0)) {
 
-            playersKalahaCount.entrySet().forEach(entry -> entry.setValue(entry.getValue() + playersKalahaCount.get(entry.getKey())));
-            Player player = Collections.max(playersKalahaCount.entrySet(), Map.Entry.comparingByValue()).getKey();
-            gameData.getGameInfo().establishWinner(player);
-            //TODO: Set kalaha stone number for the player.
+            //TODO: this logic to be simplified and performant.
+
+            Player playerWithStonesLeft = Collections.max(playersPitCount.entrySet(), Map.Entry.comparingByValue()).getKey();
+            playersKalahaCount.put(playerWithStonesLeft, playersPitCount.get(playerWithStonesLeft));
+            Player winner = Collections.max(playersKalahaCount.entrySet(), Map.Entry.comparingByValue()).getKey();
+            gameData.getGameInfo().establishWinner(winner);
+
+            // Set lost user's kalaha stones in game state
+            Pit lostUsersKalaha = gameData.getPits().stream().filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playerWithStonesLeft)).findFirst().get();
+            gameData.getPits().stream().filter(pit -> !(pit instanceof Kalaha) && pit.getPlayer().equals(playerWithStonesLeft)).forEach(pit -> pit.setStones(0));
+            lostUsersKalaha.setStones(lostUsersKalaha.getStones() + playersKalahaCount.get(playerWithStonesLeft));
         }
-
-
     }
 }

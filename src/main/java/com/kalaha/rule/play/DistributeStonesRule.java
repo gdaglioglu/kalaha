@@ -1,7 +1,6 @@
 package com.kalaha.rule.play;
 
 import com.kalaha.model.GameData;
-import com.kalaha.model.Kalaha;
 import com.kalaha.model.Pit;
 import com.kalaha.model.PlayData;
 import com.kalaha.util.PitUtil;

@@ -2,9 +2,9 @@ package com.kalaha.service;
 
 import com.kalaha.model.*;
 import com.kalaha.rule.GameRule;
-import com.kalaha.rule.input.IsGameOngoing;
-import com.kalaha.rule.input.IsPlayersTurn;
-import com.kalaha.rule.input.IsValidPit;
+import com.kalaha.rule.input.IsGameOngoingRule;
+import com.kalaha.rule.input.IsPlayersTurnRule;
+import com.kalaha.rule.input.IsValidPitRule;
 import com.kalaha.rule.play.CollectStonesFromOppositePitRule;
 import com.kalaha.rule.play.DeterminePlayerTurnRule;
 import com.kalaha.rule.play.DistributeStonesRule;
@@ -31,9 +31,9 @@ class KalahaGameTest {
     @BeforeEach
     void setUp() {
         List<GameRule> rules = new ArrayList<>();
-        rules.add(new IsGameOngoing());
-        rules.add(new IsPlayersTurn());
-        rules.add(new IsValidPit());
+        rules.add(new IsGameOngoingRule());
+        rules.add(new IsPlayersTurnRule());
+        rules.add(new IsValidPitRule());
 
         rules.add(new DistributeStonesRule());
         rules.add(new CollectStonesFromOppositePitRule());
@@ -51,19 +51,19 @@ class KalahaGameTest {
     @Test
     void newGameCreated() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
         assertNotNull(returnedGameData, "Game creation failed");
         assertEquals(0, returnedGameData.getCurrentIndex());
-        assertEquals(GameInfo.GameStatus.ONGOING, returnedGameData.getGameInfo().getGameStatus());
+        assertEquals(GameStatus.ONGOING, returnedGameData.getGameInfo().getGameStatus());
         assertNull(returnedGameData.getGameInfo().getWinner(), "No winner should have been established yet!");
         assertEquals(returnedGameData.getPits().get(0).getPlayer(), returnedGameData.getTurnInfo().whoseTurn());
-        assertEquals(TurnInfo.TurnStatus.TURN_P1, returnedGameData.getTurnInfo().getTurnStatus());
+        assertEquals(player1, returnedGameData.getTurnInfo().whoseTurn());
     }
 
     @Test
     void newGameCreatedWithCorrectPitStructure() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
         List<Pit> returnedPits = returnedGameData.getPits();
 
         assertEquals(14, returnedPits.size());
@@ -78,7 +78,7 @@ class KalahaGameTest {
     @Test
     void newGameCreatedWithCorrectKalahaData() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> kalahaList = returnedPits.stream().filter(pit -> pit instanceof Kalaha).collect(Collectors.toList());
 
@@ -98,7 +98,7 @@ class KalahaGameTest {
     @Test
     void newGameCreatedWithCorrectPitData() {
 
-        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData returnedGameData = kalahaGameWith6StonesIn6Pits.getGameData();
         List<Pit> returnedPits = returnedGameData.getPits();
         List<Pit> pitList = returnedPits.stream().filter(pit -> !(pit instanceof Kalaha)).collect(Collectors.toList());
 
@@ -108,10 +108,10 @@ class KalahaGameTest {
         Player firstPlayer = new Player(0, "Player 1");
         Player secondPlayer = new Player(1, "Player 2");
 
-        List<Pit> firstPlayersPits = IntStream.range(0, pitList.size() / 2 - 1).mapToObj(i -> pitList.get(i)).collect(Collectors.toList());
+        List<Pit> firstPlayersPits = IntStream.range(0, pitList.size() / 2 - 1).mapToObj(pitList::get).collect(Collectors.toList());
         assertEquals(firstPlayersPits.size(), firstPlayersPits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).count());
 
-        List<Pit> secondPlayersPits = IntStream.range(pitList.size() / 2, pitList.size()).mapToObj(i -> pitList.get(i)).collect(Collectors.toList());
+        List<Pit> secondPlayersPits = IntStream.range(pitList.size() / 2, pitList.size()).mapToObj(pitList::get).collect(Collectors.toList());
         assertEquals(secondPlayersPits.size(), secondPlayersPits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).count());
     }
 
@@ -120,7 +120,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(0, player1);
 
-        kalahaGameWith6StonesIn6Pits.newGame();
+        kalahaGameWith6StonesIn6Pits.getGameData();
         GameData gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
         List<Pit> pits = gameData.getPits();
@@ -139,7 +139,6 @@ class KalahaGameTest {
         assertEquals(6, pits.get(12).getStones());
         assertEquals(0, pits.get(13).getStones());
         assertEquals(6, gameData.getCurrentIndex());
-        assertEquals(TurnInfo.TurnStatus.TURN_P1, gameData.getTurnInfo().getTurnStatus());
         assertEquals(player1, gameData.getTurnInfo().whoseTurn());
     }
 
@@ -148,7 +147,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(5, player1);
 
-        kalahaGameWith6StonesIn6Pits.newGame();
+        kalahaGameWith6StonesIn6Pits.getGameData();
         GameData gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
         List<Pit> pits = gameData.getPits();
@@ -168,7 +167,6 @@ class KalahaGameTest {
         assertEquals(0, pits.get(13).getStones());
         assertEquals(11, gameData.getCurrentIndex());
         assertEquals(player2, gameData.getTurnInfo().whoseTurn());
-        assertEquals(TurnInfo.TurnStatus.TURN_P2, gameData.getTurnInfo().getTurnStatus());
     }
 
     @Test
@@ -176,7 +174,7 @@ class KalahaGameTest {
 
         PlayData playData = new PlayData(8, player2);
 
-        GameData gameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData gameData = kalahaGameWith6StonesIn6Pits.getGameData();
         gameData.getTurnInfo().flipTurn();
         gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
@@ -197,14 +195,13 @@ class KalahaGameTest {
         assertEquals(1, pits.get(13).getStones());
         assertEquals(0, gameData.getCurrentIndex());
         assertEquals(player1, gameData.getTurnInfo().whoseTurn());
-        assertEquals(TurnInfo.TurnStatus.TURN_P1, gameData.getTurnInfo().getTurnStatus());
     }
 
     @Test
     void playForPlayer2AndPit1() {
 
         PlayData playData = new PlayData(7, player2);
-        GameData gameData = kalahaGameWith6StonesIn6Pits.newGame();
+        GameData gameData = kalahaGameWith6StonesIn6Pits.getGameData();
         gameData.getTurnInfo().flipTurn();
         gameData = kalahaGameWith6StonesIn6Pits.playTurn(playData);
 
@@ -225,7 +222,6 @@ class KalahaGameTest {
         assertEquals(1, pits.get(13).getStones());
         assertEquals(13, gameData.getCurrentIndex());
         assertEquals(player2, gameData.getTurnInfo().whoseTurn());
-        assertEquals(TurnInfo.TurnStatus.TURN_P2, gameData.getTurnInfo().getTurnStatus());
     }
 
 }

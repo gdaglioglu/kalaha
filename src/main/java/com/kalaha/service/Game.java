@@ -35,8 +35,8 @@ public abstract class Game {
         this.numberOfPitsPerPlayer = gameConfig.getNumberOfPitsPerPlayer();
         this.numberOfStonesPerPit = gameConfig.getNumberOfStonesPerPit();
         this.gameRules = gameConfig.getRules();
-        this.firstPlayersName = gameConfig.getPlayer1Name();
-        this.secondPlayersName = gameConfig.getPlayer2Name();
+        this.firstPlayersName = gameConfig.getFirstPlayersName();
+        this.secondPlayersName = gameConfig.getSecondPlayersName();
     }
 
     protected abstract void validate(PlayData playData);

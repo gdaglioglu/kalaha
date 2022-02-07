@@ -11,15 +11,8 @@ public class CollectStonesFromOppositePitRule implements PlayRule {
     public void run(GameData gameData) {
 
         List<Pit> pits = gameData.getPits();
+        Pit lastPlayedPit = pits.get(gameData.getCurrentIndex());
         PlayData playData = gameData.getPlayData();
-
-        Pit playersKalaha = pits.stream().
-                filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playData.getPlayer())).
-                findFirst().get();
-
-
-        int lastPlayedIndex = gameData.getCurrentIndex();
-        Pit lastPlayedPit = pits.get(lastPlayedIndex);
 
         if (lastPlayedPit != null &&
                 !(lastPlayedPit instanceof Kalaha) &&
@@ -31,6 +24,10 @@ public class CollectStonesFromOppositePitRule implements PlayRule {
             stoneCount += lastPlayedPit.getStones();
             oppositePit.setStones(0);
             lastPlayedPit.setStones(0);
+
+            Pit playersKalaha = pits.stream().
+                    filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playData.getPlayer())).
+                    findFirst().get();
             playersKalaha.setStones(playersKalaha.getStones() + stoneCount);
             gameData.setCurrentIndex(pits.indexOf(playersKalaha));
         }

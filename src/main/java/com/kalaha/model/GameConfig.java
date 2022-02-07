@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class GameConfig {
 
-    private String player1Name;
+    private String firstPlayersName;
 
-    private String player2Name;
+    private String secondPlayersName;
 
     private int numberOfPitsPerPlayer;
 

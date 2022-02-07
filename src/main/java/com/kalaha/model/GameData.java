@@ -1,7 +1,6 @@
 package com.kalaha.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 public class GameData {
 
     /**
@@ -44,12 +42,31 @@ public class GameData {
     public GameData(GameConfig gameConfig) {
         pits = new ArrayList<>();
         currentIndex = 0;
-        firstPlayer = new Player(0, gameConfig.getPlayer1Name());
-        secondPlayer = new Player(1, gameConfig.getPlayer2Name());
+        firstPlayer = new Player(0, gameConfig.getFirstPlayersName());
+        secondPlayer = new Player(1, gameConfig.getSecondPlayersName());
         turnInfo = new TurnInfo(firstPlayer,secondPlayer);
         violationInfo = new ArrayList<>();
-        gameInfo = new GameInfo(firstPlayer, secondPlayer);
+        gameInfo = new GameInfo();
+        playData = new PlayData();
+
+        for (int i = 0; i < gameConfig.getNumberOfPitsPerPlayer(); i++) {
+
+            Pit pit = new Pit(firstPlayer, gameConfig.getNumberOfStonesPerPit());
+            pits.add(pit);
+        }
+        Kalaha kalaha1 = new Kalaha(firstPlayer, 0);
+        pits.add(kalaha1);
+
+        for (int i = gameConfig.getNumberOfPitsPerPlayer() + 1; i < gameConfig.getNumberOfPitsPerPlayer() * 2 + 1; i++) {
+
+            Pit pit = new Pit(secondPlayer, gameConfig.getNumberOfStonesPerPit());
+            pits.add(pit);
+
+        }
+        Kalaha kalaha2 = new Kalaha(secondPlayer, 0);
+        pits.add(kalaha2);
     }
+
 
     public boolean addViolation(Violation violation) {
         return violationInfo.add(violation);
@@ -58,18 +75,6 @@ public class GameData {
     public boolean hasRuleViolations() {
         return !violationInfo.isEmpty();
     }
-
-    /**
-     * Adds a pit to the list.
-     *
-     * @param pit The pit to be added.
-     * @return <code>true</code> if succeeds, otherwise <code>false</code>.
-     */
-    public boolean addPit(Pit pit) {
-
-        return pits.add(pit);
-    }
-
 
     public void clearViolations() {
         violationInfo.clear();

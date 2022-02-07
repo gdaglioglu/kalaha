@@ -1,5 +1,6 @@
 package com.kalaha.client.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,11 +11,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Player {
 
     /**
      * The id of the player.
      */
+    @EqualsAndHashCode.Include
     private int id;
 
 

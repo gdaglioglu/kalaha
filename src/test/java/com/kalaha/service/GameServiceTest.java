@@ -14,7 +14,9 @@ class GameServiceTest {
 
 
     private static final GameService gameService = new GameService();
-    GameConfig gameConfig = new GameConfig("Player 1 name", "Player 2 name", 6,6, Collections.emptyList());
+    private Player firstPlayer = new Player(0,"Player 1 name");
+    private Player secondPlayer = new Player(0,"Player 2 name");
+    private GameConfig gameConfig = new GameConfig(firstPlayer.getName(), secondPlayer.getName(), 6, 6, Collections.emptyList());
 
     @Test
     void newGameCreated() {
@@ -22,7 +24,7 @@ class GameServiceTest {
         GameData returnedGameData = gameService.newGame(gameConfig);
         assertNotNull(returnedGameData, "Game creation failed");
         assertEquals(0, returnedGameData.getCurrentIndex());
-        assertEquals(TurnInfo.TurnStatus.TURN_P1, returnedGameData.getTurnInfo().getTurnStatus());
+        assertEquals(firstPlayer, returnedGameData.getTurnInfo().whoseTurn());
     }
 
     @Test

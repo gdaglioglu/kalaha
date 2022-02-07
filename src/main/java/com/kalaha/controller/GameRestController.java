@@ -5,7 +5,9 @@ import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
 import com.kalaha.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * TODO: HATEOS metadata.
@@ -52,8 +54,13 @@ public class GameRestController {
      */
     @GetMapping("/game")
     public GameData getGame() {
+        GameData game = gameService.getGame();
 
-        return gameService.getGame();
+        if(game == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game is not initialized, please go to /createGame page");
+        }
+
+        return game;
     }
 
     /**

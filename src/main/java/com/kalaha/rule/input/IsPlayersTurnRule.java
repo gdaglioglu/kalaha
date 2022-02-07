@@ -2,13 +2,12 @@ package com.kalaha.rule.input;
 
 import com.kalaha.model.*;
 
-public class IsPlayersTurn implements InputRule {
+public class IsPlayersTurnRule implements InputRule {
 
     @Override
     public void run(GameData gameData) {
 
-        TurnInfo turnInfo = gameData.getTurnInfo();
-        Player playerToPlay = turnInfo.whoseTurn();
+        Player playerToPlay = gameData.getTurnInfo().whoseTurn();
         PlayData playData = gameData.getPlayData();
 
         if (playData != null && !playData.getPlayer().equals(playerToPlay)) {

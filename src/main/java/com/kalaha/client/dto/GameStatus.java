@@ -5,12 +5,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Client side POJO that holds turn information.
+ * Client side POJO that holds the game status, e.g. in progress or finished game.
  */
 @Getter
-@Setter
 @NoArgsConstructor
-public class TurnInfo {
-
-    private Player toPlay;
+public enum GameStatus {
+    ONGOING,
+    FINISHED
 }

@@ -17,6 +17,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -26,6 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route("")
 @Theme(value = Lumo.class)
 public class ConfigView extends VerticalLayout {
+
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(ConfigView.class);
 
     /**
      * Constant for width of the form.
@@ -69,6 +76,7 @@ public class ConfigView extends VerticalLayout {
 
             if(firstPlayersName.isEmpty() || secondPlayersName.isEmpty()){
                 Notification notification = Notification.show("Enter user names to start!");
+                logger.error("Player names not entered");
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
             }
@@ -92,5 +100,7 @@ public class ConfigView extends VerticalLayout {
 
         add(gameConfiguration, formLayout, submitButton);
         setHorizontalComponentAlignment(Alignment.CENTER, gameConfiguration, formLayout, submitButton);
+
+        logger.debug("Config view initialized");
     }
 }

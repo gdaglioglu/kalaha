@@ -20,17 +20,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = GameApplication.class)
 @AutoConfigureMockMvc
-class GameRestControllerTest {
+class RestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private GameRestController gameRestController;
+    private RestController restController;
 
     @Test
     public void contextLoads() {
-        assertThat(gameRestController).isNotNull();
+        assertThat(restController).isNotNull();
     }
 
     @Test

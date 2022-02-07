@@ -3,6 +3,7 @@ package com.kalaha.client.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Client side POJO that holds data for pits on the board i.e. stones, player.
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Pit {
 
     /**

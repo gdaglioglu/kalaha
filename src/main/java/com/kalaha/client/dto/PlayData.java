@@ -3,6 +3,7 @@ package com.kalaha.client.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Client side POJO that holds a play data, e.g. selected pit and player who selected it.
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class PlayData {
 
     /**

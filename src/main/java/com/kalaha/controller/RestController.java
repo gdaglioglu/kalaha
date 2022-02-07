@@ -4,6 +4,8 @@ import com.kalaha.model.GameConfig;
 import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
 import com.kalaha.service.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,13 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * Rest controller that exposes APIs to control game logic.
  */
-@RestController
-public class GameRestController {
+@org.springframework.web.bind.annotation.RestController
+public class RestController {
+
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(RestController.class);
 
     /**
      * Service to manipulate game logic.
@@ -26,7 +33,7 @@ public class GameRestController {
      * @param gameService The reference to service.
      */
     @Autowired
-    public GameRestController(GameService gameService) {
+    public RestController(GameService gameService) {
         this.gameService = gameService;
     }
 
@@ -40,7 +47,9 @@ public class GameRestController {
     @PostMapping("/game")
     public GameData newGame(@RequestBody GameConfig gameConfig) {
 
-        return gameService.newGame(gameConfig);
+        GameData gameData = gameService.newGame(gameConfig);
+        logger.debug("Game created: {}", gameData);
+        return gameData;
     }
 
     /**
@@ -52,13 +61,15 @@ public class GameRestController {
     @GetMapping("/game")
     public GameData getGame() {
 
-        GameData game = gameService.getGame();
+        GameData gameData = gameService.getGame();
 
-        if (game == null) {
+        if (gameData == null) {
+            logger.error("Game not initialized!");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game is not initialized, please create a game first");
         }
+        logger.debug("Game retrieved: {}", gameData);
 
-        return game;
+        return gameData;
     }
 
     /**
@@ -69,6 +80,8 @@ public class GameRestController {
     @PutMapping(value = "/game")
     public GameData play(@RequestBody PlayData input) {
 
-        return gameService.play(input);
+        GameData gameData = gameService.play(input);
+        logger.debug("Game retrieved: {}", gameData);
+        return gameData;
     }
 }

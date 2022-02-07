@@ -32,6 +32,8 @@ public class KalahaGame extends Game {
     protected KalahaGame(GameConfig gameConfig) {
         super(gameConfig);
         this.gameData = new GameData(gameConfig);
+        logger.info("Kalaha game is initialized with {} pits and {} stones per pit",
+                gameConfig.getNumberOfPitsPerPlayer(), gameConfig.getNumberOfStonesPerPit());
     }
 
     /**

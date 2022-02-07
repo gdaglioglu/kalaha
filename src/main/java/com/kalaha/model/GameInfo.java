@@ -1,10 +1,12 @@
 package com.kalaha.model;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * POJO that holds game status and winner player information.
  */
+@ToString
 public class GameInfo {
 
     @Getter

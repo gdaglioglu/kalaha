@@ -21,12 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class KalahaGameTest {
 
-
     private KalahaGame kalahaGameWith6StonesIn6Pits;
-
     private Player player1;
     private Player player2;
-
 
     @BeforeEach
     void setUp() {
@@ -41,7 +38,7 @@ class KalahaGameTest {
 
         rules.add(new AreAllPitsEmptyForEitherPlayer());
 
-        GameConfig gameConfig = new GameConfig("Player 1 name","Player 2 name",6,6,rules);
+        GameConfig gameConfig = new GameConfig("Player 1 name", "Player 2 name", 6, 6, rules);
         kalahaGameWith6StonesIn6Pits = new KalahaGame(gameConfig);
 
         player1 = new Player(0, "Player 1 name");

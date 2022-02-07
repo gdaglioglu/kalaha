@@ -3,12 +3,12 @@ package com.kalaha.client.service;
 import com.kalaha.client.dto.GameConfig;
 import com.kalaha.client.dto.GameData;
 import com.kalaha.client.dto.PlayData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.Serializable;
 
 /**
  * The service that allows client to consume rest apis.
@@ -16,13 +16,24 @@ import java.io.Serializable;
  * It fetches all available results immediately.
  */
 @Service
-public class RestClientService implements Serializable {
+public class RestClientService {
+
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(RestClientService.class);
 
     /**
      * The port changes depending on where we deploy the app
      */
     @Value("${server.port}")
     private String serverPort;
+
+    @Value("${server.host}")
+    private String serverHost;
+
+    @Value("${server.kalaha.endpoint}")
+    private String endPoint;
 
     /**
      * Initiates a request to the relevant REST API to create a game.
@@ -33,9 +44,11 @@ public class RestClientService implements Serializable {
     public GameData createGame(GameConfig gameConfig) {
 
         final WebClient.RequestHeadersSpec<?> spec = WebClient.create().post()
-                .uri("http://localhost:" + serverPort + "/game").body(Mono.just(gameConfig), GameConfig.class);
+                .uri(serverHost + serverPort + endPoint).body(Mono.just(gameConfig), GameConfig.class);
 
         final GameData gameData = spec.retrieve().toEntity(GameData.class).block().getBody();
+
+        logger.debug("Game created: {}", gameData);
         return gameData;
     }
 
@@ -46,12 +59,11 @@ public class RestClientService implements Serializable {
      */
     public GameData getGameData() {
 
-        System.out.println("Fetching all game data through REST..");
-
         final WebClient.RequestHeadersSpec<?> spec = WebClient.create().get()
-                .uri("http://localhost:" + serverPort + "/game");
+                .uri(serverHost + serverPort + endPoint);
 
         GameData gameData = spec.retrieve().toEntity(GameData.class).block().getBody();
+        logger.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 
@@ -64,11 +76,13 @@ public class RestClientService implements Serializable {
      */
     public GameData sendPlayData(PlayData playData) {
 
+        logger.debug("Play data sent: {}", playData);
+
         final WebClient.RequestHeadersSpec<?> spec = WebClient.create().put()
-                .uri("http://localhost:" + serverPort + "/game").body(Mono.just(playData), PlayData.class);
+                .uri(serverHost + serverPort + endPoint).body(Mono.just(playData), PlayData.class);
 
         final GameData gameData = spec.retrieve().toEntity(GameData.class).block().getBody();
-
+        logger.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 }

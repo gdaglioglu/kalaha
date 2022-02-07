@@ -2,12 +2,14 @@ package com.kalaha.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Holds turn information in the game.
  */
 @NoArgsConstructor
 @Getter
+@ToString
 public class TurnInfo {
 
     private Player toPlay;

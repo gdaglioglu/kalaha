@@ -1,6 +1,8 @@
 package com.kalaha.rule.win;
 
 import com.kalaha.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +12,11 @@ import java.util.Map;
  * Rule implementation to check if game is finished and establish winner.
  */
 public class AreAllPitsEmptyForEitherPlayer implements WinRule {
+
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(AreAllPitsEmptyForEitherPlayer.class);
 
     /**
      * {@inheritDoc}
@@ -46,6 +53,10 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
             Pit lostUsersKalaha = gameData.getPits().stream().filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playerWithStonesLeft)).findFirst().get();
             gameData.getPits().stream().filter(pit -> !(pit instanceof Kalaha) && pit.getPlayer().equals(playerWithStonesLeft)).forEach(pit -> pit.setStones(0));
             lostUsersKalaha.setStones(lostUsersKalaha.getStones() + playersKalahaCount.get(playerWithStonesLeft));
+
+            logger.info("Game completed - Winner: {}", winner);
         }
+
+        logger.info("Game ongoing");
     }
 }

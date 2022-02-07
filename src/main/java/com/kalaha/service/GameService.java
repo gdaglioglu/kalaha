@@ -11,6 +11,8 @@ import com.kalaha.rule.play.CollectStonesFromOppositePitRule;
 import com.kalaha.rule.play.DeterminePlayerTurnRule;
 import com.kalaha.rule.play.DistributeStonesRule;
 import com.kalaha.rule.win.AreAllPitsEmptyForEitherPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +23,11 @@ import java.util.List;
  */
 @Service
 public class GameService {
+
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
     /**
      * The reference to the game.
@@ -48,7 +55,10 @@ public class GameService {
         gameConfig.setRules(rules);
 
         game = new KalahaGame(gameConfig);
-        return game.getGameData();
+        GameData gameData = game.getGameData();
+        logger.debug("Game retrieved: {}", gameData);
+
+        return gameData;
     }
 
     /**
@@ -59,7 +69,9 @@ public class GameService {
      */
     public GameData play(PlayData playData) {
 
-        return game.playTurn(playData);
+        GameData gameData = game.playTurn(playData);
+        logger.debug("Turn played: {}", gameData);
+        return gameData;
     }
 
     /**
@@ -68,9 +80,14 @@ public class GameService {
      * @return the data that represents the game.
      */
     public GameData getGame() {
+
         if (this.game == null) {
+            logger.error("Game not initialised");
             return null;
         }
-        return game.getGameData();
+
+        GameData gameData = game.getGameData();
+        logger.debug("Game retrieved: {}", gameData);
+        return gameData;
     }
 }

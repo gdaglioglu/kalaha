@@ -14,11 +14,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * View that displays the actual kalaha game interface.
@@ -29,10 +30,35 @@ import java.util.Map;
 @Theme(value = Lumo.class)
 public class GameView extends VerticalLayout {
 
+    /**
+     * Logger instance.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(GameView.class);
+
+    /**
+     * The layout to store first player's non-kalaha pits.
+     */
     private final HorizontalLayout firstPlayerPitLayout;
+
+    /**
+     * The layout to store second player's non-kalaha pits.
+     */
     private final HorizontalLayout secondPlayerPitLayout;
+
+    /**
+     * The references to the list of buttons created - to be used in button enable/disable logic.
+     */
     private final List<Button> buttonList = new ArrayList<>();
-    private final Map<Player, VerticalLayout> playerToKalaha;
+
+    /**
+     * The references to the layout that holds the first player's kalaha.
+     */
+    private final VerticalLayout firstPlayersKalahaLayout;
+
+    /**
+     * The references to the layout that holds the second player's kalaha.
+     */
+    private final VerticalLayout secondPlayersKalahaLayout;
 
     /**
      * Constructs the game view.
@@ -44,13 +70,12 @@ public class GameView extends VerticalLayout {
         firstPlayerPitLayout = new HorizontalLayout();
         secondPlayerPitLayout = new HorizontalLayout();
 
-        VerticalLayout firstPlayersKalahaLayout = new VerticalLayout();
-        VerticalLayout kalaha2Layout = new VerticalLayout();
+        firstPlayersKalahaLayout = new VerticalLayout();
+        secondPlayersKalahaLayout = new VerticalLayout();
 
         GameData gameData = service.getGameData();
         Player firstPlayer = gameData.getFirstPlayer();
         Player secondPlayer = gameData.getSecondPlayer();
-        playerToKalaha = Map.of(firstPlayer, firstPlayersKalahaLayout, secondPlayer, kalaha2Layout);
 
         H3 player1Name = new H3(firstPlayer.getName());
         H3 player2Name = new H3(secondPlayer.getName());
@@ -60,8 +85,8 @@ public class GameView extends VerticalLayout {
         VerticalLayout pitLayout = new VerticalLayout();
         pitLayout.add(secondPlayerPitLayout);
         pitLayout.add(firstPlayerPitLayout);
-        pitBoardLayout.add(kalaha2Layout, pitLayout, firstPlayersKalahaLayout);
-        Button restartButton = new Button("Restart", e -> UI.getCurrent().navigate(ConfigView.class));
+        pitBoardLayout.add(secondPlayersKalahaLayout, pitLayout, firstPlayersKalahaLayout);
+        Button restartButton = new Button("New Game", e -> UI.getCurrent().navigate(ConfigView.class));
         restartButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         add(player2Name, pitBoardLayout, player1Name, restartButton);
@@ -71,19 +96,22 @@ public class GameView extends VerticalLayout {
         setHorizontalComponentAlignment(Alignment.CENTER, player2Name, pitBoardLayout, player1Name, restartButton);
 
         addPlayerPits(gameData, service);
+
+        logger.debug("Game view initialized");
     }
 
     /**
      * Adds pits for players to the view.
+     *
      * @param gameData the representation of the game data.
-     * @param service the client service to invoke REST APIs.
+     * @param service  the client service to invoke REST APIs.
      */
     private void addPlayerPits(GameData gameData, RestClientService service) {
 
         List<Pit> pits = gameData.getPits();
-
         int firstPlayersKalahaIndex = (pits.size() - 2) / 2;
         int secondPlayersKalahaIndex = pits.size() - 1;
+        TurnInfo turnInfo = gameData.getTurnInfo();
 
         pits.forEach(pit -> {
             PlayData playData = new PlayData();
@@ -97,17 +125,22 @@ public class GameView extends VerticalLayout {
                 GameData updatedGameData = service.sendPlayData(playData);
 
                 for (Violation violation : updatedGameData.getViolationInfo()) {
-                    Notification notification = Notification.show(String.join(System.lineSeparator(), violation.getMessage()));
+                    String violationMessage = String.join(System.lineSeparator(), violation.getMessage());
+                    Notification notification = Notification.show(violationMessage);
                     notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    logger.error("Input violation occurred: {}", violationMessage);
                 }
                 refreshView(updatedGameData);
             });
             button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-            if (pitIndex == firstPlayersKalahaIndex || pitIndex == secondPlayersKalahaIndex) {
-                button.setEnabled(false);
+            button.setEnabled(turnInfo.getToPlay().equals(pit.getPlayer()));
+            if (pitIndex == firstPlayersKalahaIndex) {
                 button.setSizeFull();
-                playerToKalaha.get(pit.getPlayer()).add(button);
+                firstPlayersKalahaLayout.add(button);
+            } else if (pitIndex == secondPlayersKalahaIndex) {
+                button.setSizeFull();
+                secondPlayersKalahaLayout.add(button);
             }
 
             buttonList.add(button);
@@ -142,11 +175,14 @@ public class GameView extends VerticalLayout {
 
         GameInfo gameInfo = gameData.getGameInfo();
         if (gameInfo.getGameStatus() == GameStatus.FINISHED) {
-            Notification notification = Notification.show("Congratulations " + gameInfo.getWinner().getName());
+            Notification notification = Notification.show("Winner: " + gameInfo.getWinner().getName() +
+                    System.lineSeparator() + "Congratulations!");
             notification.setPosition(Notification.Position.TOP_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             notification.setDuration(10000);
             buttonList.forEach(button -> button.setEnabled(false));
         }
+
+        logger.debug("Game view refreshed: {}", gameData);
     }
 }

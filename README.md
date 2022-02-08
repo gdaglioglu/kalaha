@@ -14,6 +14,8 @@ The following attributes must be entered prior to starting the game.
 
 ![](screenshots/kalaha-config.png)
 
+<img src="screenshots/kalaha-config.png" alt="kalaha game configuration" height="466" width="312"/>
+
 ## Board Setup (Default)
 
 * `2 Players`

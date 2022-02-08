@@ -12,7 +12,7 @@
 	<artifactId>game</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>game</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Kalaha game project for bol.com</description>
 	<properties>
 		<java.version>11</java.version>
 		<vaadin.version>14.8.3</vaadin.version>

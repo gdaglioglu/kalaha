@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,40 +25,53 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
     @Override
     public void run(GameData gameData) {
 
-        Map<Player, Integer> playersPitCount = new HashMap<>();
-        Map<Player, Integer> playersKalahaCount = new HashMap<>();
+        Map<Player, Integer> playersPitStonesCount = new HashMap<>();
+        Map<Player, Integer> playersKalahaStonesCount = new HashMap<>();
 
         gameData.getPits().forEach(pit -> {
 
             Player player = pit.getPlayer();
 
             if (pit instanceof Kalaha) {
-                Integer count = playersKalahaCount.getOrDefault(player, 0);
-                playersKalahaCount.put(player, count + pit.getStones());
+                Integer count = playersKalahaStonesCount.getOrDefault(player, 0);
+                playersKalahaStonesCount.put(player, count + pit.getStones());
                 return;
             }
-            Integer count = playersPitCount.getOrDefault(player, 0);
-            playersPitCount.put(player, count + pit.getStones());
+            Integer count = playersPitStonesCount.getOrDefault(player, 0);
+            playersPitStonesCount.put(player, count + pit.getStones());
         });
 
-        if (playersPitCount.containsValue(0)) {
 
-            //TODO: this logic to be simplified and performant.
+        Player playerWithNoStones = Collections.min(playersPitStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
 
-            Player playerWithStonesLeft = Collections.max(playersPitCount.entrySet(), Map.Entry.comparingByValue()).getKey();
-            playersKalahaCount.put(playerWithStonesLeft, playersPitCount.get(playerWithStonesLeft));
-            Player winner = Collections.max(playersKalahaCount.entrySet(), Map.Entry.comparingByValue()).getKey();
+        if (playersPitStonesCount.get(playerWithNoStones) == 0) {
+
+            Player firstPlayer = gameData.getFirstPlayer();
+            Player secondPlayer = gameData.getSecondPlayer();
+
+            Player playerWithStones = firstPlayer.equals(playerWithNoStones) ? secondPlayer : firstPlayer;
+            playersKalahaStonesCount.put(playerWithStones, playersKalahaStonesCount.get(playerWithStones) + playersPitStonesCount.get(playerWithStones));
+
+            Player winner = Collections.max(playersKalahaStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
             gameData.getGameInfo().setWinner(winner);
 
-            // Set lost user's kalaha stones in game state
-            Pit lostUsersKalaha = gameData.getPits().stream().filter(pit -> pit instanceof Kalaha && pit.getPlayer().equals(playerWithStonesLeft)).findFirst().get();
-            gameData.getPits().stream().filter(pit -> !(pit instanceof Kalaha) && pit.getPlayer().equals(playerWithStonesLeft)).forEach(pit -> pit.setStones(0));
-            lostUsersKalaha.setStones(lostUsersKalaha.getStones() + playersKalahaCount.get(playerWithStonesLeft));
-            //Game winner must be set in here!!
+            Player loser = firstPlayer.equals(winner) ? secondPlayer : firstPlayer;
+
+            // Sort out loser's pits
+            List<Pit> pits = gameData.getPits();
+            for (Pit pit : pits) {
+                if (pit.getPlayer().equals(loser)) {
+                    if (pit instanceof Kalaha) {
+                        pit.setStones(playersKalahaStonesCount.get(loser));
+                        continue;
+                    }
+                    pit.setStones(0);
+                }
+            }
 
             logger.info("Game completed - Winner: {}", winner);
+            return;
         }
-
         logger.info("Game ongoing");
     }
 }

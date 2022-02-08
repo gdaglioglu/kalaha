@@ -88,9 +88,9 @@ class AreAllPitsEmptyForEitherPlayerTest {
         int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
 
         assertEquals(25, pits.get(6).getStones());
-        assertEquals(36, pits.get(13).getStones());
+        assertEquals(0, pits.get(13).getStones());
         assertEquals(pits.get(6).getStones(), firstPlayersOverallStoneCount);
-        assertEquals(pits.get(13).getStones(), secondPlayersOverallStoneCount);
+        assertEquals(36, secondPlayersOverallStoneCount);
         assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
         assertEquals(secondPlayer, gameInfo.getWinner());
     }
@@ -143,9 +143,9 @@ class AreAllPitsEmptyForEitherPlayerTest {
         int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
         int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
 
-        assertEquals(36, pits.get(6).getStones());
+        assertEquals(0, pits.get(6).getStones());
         assertEquals(25, pits.get(13).getStones());
-        assertEquals(pits.get(6).getStones(), firstPlayersOverallStoneCount);
+        assertEquals(36, firstPlayersOverallStoneCount);
         assertEquals(pits.get(13).getStones(), secondPlayersOverallStoneCount);
         assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
         assertEquals(firstPlayer, gameInfo.getWinner());

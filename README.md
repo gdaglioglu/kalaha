@@ -1,5 +1,6 @@
 
-![](screenshots/kalaha-game.png)
+<img src="screenshots/kalaha-game.png" alt="kalaha game view" height="361" width="976"/>
+
 
 Kalah, also called Kalaha or Mancala, is a game in the mancala family imported in the United States by William Julius Champion, Jr. in 1940. <br/>This game is sometimes also called "Kalahari", possibly by false etymology from the Kalahari desert in Namibia.<br/><br/>
 The game provides a Kalah board and a number of stones or counters. The board has 6 small pits, called houses, on each side; and a big pit, called a kalaha, at each end. The objective of the game is to capture more stones than one's opponent - [Wikipedia](https://en.wikipedia.org/wiki/Mancala)
@@ -11,8 +12,6 @@ The following attributes must be entered prior to starting the game.
 * `Player 2`: Name of second player (mandatory)
 * `Number of pits per player`: Number of pits to be added to each player's side (mandatory, range[1-10])
 * `Number of stones per pit`: Number of stones to be added to each pit (mandatory, range[1-10])
-
-![](screenshots/kalaha-config.png)
 
 <img src="screenshots/kalaha-config.png" alt="kalaha game configuration" height="466" width="312"/>
 

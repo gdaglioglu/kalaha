@@ -97,7 +97,7 @@ Please see [SCREENSHOTS.md](SCREENSHOTS.md) for screenshots.
 * We could increase the competitiveness of the game by:
   * Adding a timer to play
   * Designing a system user to play against a real user
-  * 
+  
 * General UI improvements
 
 ## Author

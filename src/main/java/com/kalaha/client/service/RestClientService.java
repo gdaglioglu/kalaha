@@ -13,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+
 /**
  * The service that allows client to consume rest apis.
- * {@link #createGame(GameConfig)}, {@link #getGameData()} and {@link #sendPlayData(PlayData)} uses a DTO class to map the JSON results from API.
+ * {@link #createGame(GameConfig)}, {@link #getGameData(long)} and {@link #sendPlayData(PlayData)} uses a DTO class to map the JSON results from API.
  * It fetches all available results immediately.
  */
 @Service
@@ -51,6 +53,7 @@ public class RestClientService {
 
     /**
      * Constructs a rest client service.
+     *
      * @param restTemplate the rest template to be used.
      */
     @Autowired
@@ -63,24 +66,24 @@ public class RestClientService {
      * Initiates a request to the relevant REST API to create a game.
      *
      * @param gameConfig the game configuration parameters.
-     * @return the representation of the created game.
+     * @return the location of the created game.
      */
-    public GameData createGame(GameConfig gameConfig) {
+    public URI createGame(GameConfig gameConfig) {
 
         HttpEntity<GameConfig> request = new HttpEntity<>(gameConfig);
-        GameData gameData = restTemplate.postForObject(serverHost + serverPort + endPoint, request, GameData.class);
-        logger.debug("Game created: {}", gameData);
-        return gameData;
+        URI locationHeader = restTemplate.postForLocation(serverHost + serverPort + endPoint, request);
+        logger.debug("Game created: {}", locationHeader);
+        return locationHeader;
     }
 
     /**
      * Initiates a request to the relevant REST API to retrieve game data.
-     *
+     * @param id the identifier of the game to be retrieved.
      * @return the representation of the created game.
      */
-    public GameData getGameData() {
+    public GameData getGameData(long id) {
 
-        GameData gameData = restTemplate.getForObject(serverHost + serverPort + endPoint, GameData.class);
+        GameData gameData = restTemplate.getForObject(serverHost + serverPort + endPoint + "/" + id, GameData.class);
         logger.debug("Game retrieved: {}", gameData);
         return gameData;
     }

@@ -12,8 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.slf4j.Logger;
@@ -28,9 +27,9 @@ import java.util.List;
  * A new instance of this class is created for every new user and every browser tab/window.
  */
 @PageTitle("Let's play!")
-@Route("/kalaha")
+@Route("/kalaha/:id([0-9]*)")
 @Theme(value = Lumo.class)
-public class GameView extends VerticalLayout {
+public class GameView extends VerticalLayout implements BeforeEnterObserver {
 
     /**
      * Logger instance.
@@ -63,13 +62,18 @@ public class GameView extends VerticalLayout {
     private final VerticalLayout secondPlayerKalahaLayout = new VerticalLayout();
 
     /**
+     * The game id reference.
+     */
+    private long gameId;
+
+    /**
      * Constructs the game view.
      *
      * @param service The service that enables client to consume web services.
      */
     public GameView(@Autowired RestClientService service) {
 
-        GameData gameData = service.getGameData();
+        GameData gameData = service.getGameData(gameId);
         Player firstPlayer = gameData.getFirstPlayer();
         Player secondPlayer = gameData.getSecondPlayer();
 
@@ -91,7 +95,7 @@ public class GameView extends VerticalLayout {
         setHorizontalComponentAlignment(Alignment.CENTER, secondPlayerName, pitBoardLayout, firstPlayerName, restartButton);
         addPlayerPits(gameData, service);
 
-        logger.debug("Game view initialized");
+        logger.debug("Game view initialized: id = {}", gameId);
     }
 
     /**
@@ -135,7 +139,7 @@ public class GameView extends VerticalLayout {
      *
      * @param service  the client service to initiate REST calls.
      * @param gameData the data that represents the game.
-     * @param pit the data that represents the game.
+     * @param pit      the data that represents the game.
      * @param pitIndex the index of the pit.
      */
     private void setButtonConfig(RestClientService service, GameData gameData, Pit pit, int pitIndex) {
@@ -169,7 +173,7 @@ public class GameView extends VerticalLayout {
             GameData updatedGameData = service.sendPlayData(playData);
 
             for (Violation violation : updatedGameData.getViolationInfo()) {
-                String violationMessage = String.join( System.lineSeparator(), violation.getMessage());
+                String violationMessage = String.join(System.lineSeparator(), violation.getMessage());
                 Notification notification = Notification.show(violationMessage);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 logger.error("Input violation occurred: {}", violationMessage);
@@ -210,5 +214,15 @@ public class GameView extends VerticalLayout {
         }
 
         logger.debug("Game view refreshed: {}", gameData);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+
+        RouteParameters routeParameters = beforeEnterEvent.getRouteParameters();
+        gameId = Long.parseLong(routeParameters.get("id").orElse("0"));
     }
 }

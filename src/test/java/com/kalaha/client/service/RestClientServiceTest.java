@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+
 @ExtendWith(MockitoExtension.class)
 class RestClientServiceTest {
 
@@ -30,20 +32,15 @@ class RestClientServiceTest {
 
         GameConfig gameConfig = new GameConfig();
         HttpEntity<GameConfig> request = new HttpEntity<>(gameConfig);
+        URI uri = URI.create("test");
+        Mockito.when(restTemplate.postForLocation("nullnullnull",request)).thenReturn(uri);
         GameData gameData = new GameData();
-        Mockito.when(restTemplate.postForObject("nullnullnull",request, GameData.class)).thenReturn(gameData);
+        Mockito.when(restTemplate.getForObject("nullnullnull/1", GameData.class)).thenReturn(gameData);
 
-        GameData returnedGameData = restClientService.createGame(gameConfig);
-        Assertions.assertEquals(gameData, returnedGameData);
-    }
+        URI returnedURI = restClientService.createGame(gameConfig);
+        Assertions.assertEquals(uri, returnedURI);
 
-    @Test
-    public void whenCallingGetGame_thenClientReceivesGame() {
-
-        GameData gameData = new GameData();
-        Mockito.when(restTemplate.getForObject("nullnullnull", GameData.class)).thenReturn(gameData);
-
-        GameData returnedGameData = restClientService.getGameData();
+        GameData returnedGameData = restClientService.getGameData(1);
         Assertions.assertEquals(gameData, returnedGameData);
     }
 

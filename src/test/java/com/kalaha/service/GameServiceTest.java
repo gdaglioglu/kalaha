@@ -63,7 +63,7 @@ class GameServiceTest {
     @Test
     void getGame_gameIsNotInitialized() {
 
-        GameData returnedGameData = gameService.getGame();
+        GameData returnedGameData = gameService.getGame(1L);
         assertNull(returnedGameData);
     }
 
@@ -71,7 +71,7 @@ class GameServiceTest {
     void getGame_gameIsInitialized() {
 
         gameService.newGame(gameConfig);
-        GameData returnedGameData = gameService.getGame();
+        GameData returnedGameData = gameService.getGame(1L);
         assertEquals(mockGameData, returnedGameData);
     }
 }

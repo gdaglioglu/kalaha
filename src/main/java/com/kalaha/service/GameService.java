@@ -67,11 +67,14 @@ public class GameService {
     }
 
     /**
-     * Retrieves the game data.
+     * Retrieves the game data. Note that id is ignored at the moment.
+     * @id identifier of the game.
      *
      * @return the data that represents the game.
      */
-    public GameData getGame() {
+    public GameData getGame(Long id) {
+
+        logger.debug("Game requested: id = {}", id);
 
         if (this.game == null) {
             logger.error("Game not initialised");

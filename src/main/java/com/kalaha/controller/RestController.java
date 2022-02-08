@@ -7,9 +7,13 @@ import com.kalaha.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Rest controller that exposes APIs to control game logic.
@@ -22,6 +26,12 @@ public class RestController {
      * Logger instance.
      */
     public static final Logger logger = LoggerFactory.getLogger(RestController.class);
+
+    /**
+     * The game endpoint
+     */
+    @Value("${server.kalaha.endpoint}")
+    private String endPoint;
 
     /**
      * Service to manipulate game logic.
@@ -42,27 +52,29 @@ public class RestController {
      * Creates a new game.
      *
      * @param gameConfig the config to be used in game creation.
-     * @return the representation of the game data.
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public GameData newGame(@RequestBody GameConfig gameConfig) {
+    public void newGame(@RequestBody GameConfig gameConfig, HttpServletResponse response) {
 
         GameData gameData = gameService.newGame(gameConfig);
-        logger.debug("Game created: {}", gameData);
-        return gameData;
+
+        response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(endPoint + "/" + gameData.getId()).toUriString());
     }
 
     /**
-     * TODO: Review GameData to see whether we send all relevant data.
      * Retrieves the game data<p/>
      *
      * @return the representation of the game data.
      */
-    @GetMapping()
-    public GameData getGame() {
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GameData getGame(@PathVariable long id) {
 
-        GameData gameData = gameService.getGame();
+        logger.debug("Game requested: id = {}", id);
+
+        GameData gameData = gameService.getGame(id);
 
         if (gameData == null) {
             logger.error("Game not initialized!");

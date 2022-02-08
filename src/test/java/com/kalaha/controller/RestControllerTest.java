@@ -18,8 +18,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = GameApplication.class)
 @AutoConfigureMockMvc
@@ -35,8 +34,6 @@ class RestControllerTest {
 
     @Autowired
     private GameService gameService;
-
-    private final String expectedJson = "{\"id\":1,\"pits\":[{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":0},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":0}],\"turnInfo\":{\"toPlay\":{\"id\":0,\"name\":\"Gokhan\"}},\"violationInfo\":[],\"gameInfo\":{\"gameStatus\":\"ONGOING\",\"winner\":null},\"playData\":{\"selectedPit\":0,\"player\":null},\"firstPlayer\":{\"id\":0,\"name\":\"Gokhan\"},\"secondPlayer\":{\"id\":1,\"name\":\"Mathilde\"},\"currentIndex\":0}";
 
     @BeforeEach
     public void setUp() {
@@ -54,7 +51,8 @@ class RestControllerTest {
         this.mockMvc.perform(post("/game").
                         content(new ObjectMapper().writeValueAsString(gameConfig)).contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isCreated()).
-                andExpect(content().string(expectedJson));
+                andExpect(content().string("")).
+                andExpect(header().string("location","http://localhost/game/1"));
     }
 
     @Test
@@ -62,7 +60,8 @@ class RestControllerTest {
 
         gameService.newGame(gameConfig);
 
-        this.mockMvc.perform(get("/game").contentType(MediaType.APPLICATION_JSON)).
+        String expectedJson = "{\"id\":1,\"pits\":[{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":6},{\"player\":{\"id\":0,\"name\":\"Gokhan\"},\"stones\":0},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":6},{\"player\":{\"id\":1,\"name\":\"Mathilde\"},\"stones\":0}],\"turnInfo\":{\"toPlay\":{\"id\":0,\"name\":\"Gokhan\"}},\"violationInfo\":[],\"gameInfo\":{\"gameStatus\":\"ONGOING\",\"winner\":null},\"playData\":{\"selectedPit\":0,\"player\":null},\"firstPlayer\":{\"id\":0,\"name\":\"Gokhan\"},\"secondPlayer\":{\"id\":1,\"name\":\"Mathilde\"},\"currentIndex\":0}";
+        this.mockMvc.perform(get("/game/1").contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isOk()).
                 andExpect(content().string(expectedJson));
     }

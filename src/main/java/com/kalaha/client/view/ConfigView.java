@@ -17,11 +17,15 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.net.URI;
 
 /**
  * View to capture the name of the players and configuration parameters for the game.
@@ -40,6 +44,12 @@ public class ConfigView extends VerticalLayout {
      * Constant for width of the form.
      */
     public static final String PX_250 = "250px";
+
+    /**
+     * The game endpoint
+     */
+    @Value("${server.kalaha.endpoint}")
+    private String endPoint;
 
     /**
      * Constructs configuration view page.
@@ -76,6 +86,7 @@ public class ConfigView extends VerticalLayout {
 
     /**
      * Gets an {@link IntegerField} after setting common attributes.
+     *
      * @return the customised integer field.
      */
     private IntegerField getIntegerField() {
@@ -90,6 +101,7 @@ public class ConfigView extends VerticalLayout {
 
     /**
      * Gets an {@link TextField} after setting common attributes.
+     *
      * @return the customised text field.
      */
     private TextField getPlayersNameField() {
@@ -129,9 +141,10 @@ public class ConfigView extends VerticalLayout {
             GameConfig gameConfig = new GameConfig(firstPlayersName, secondPlayersName,
                     numberOfPitsPerPlayerField.getValue(), numberOfStonesPerPitField.getValue());
 
-            service.createGame(gameConfig);
+            URI uri = service.createGame(gameConfig);
+            String id = uri.getPath().substring(endPoint.length() + 1);
 
-            UI.getCurrent().navigate(GameView.class);
+            UI.getCurrent().navigate(GameView.class, new RouteParameters("id", id));
         };
     }
 }

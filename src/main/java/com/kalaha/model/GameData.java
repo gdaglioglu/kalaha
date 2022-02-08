@@ -67,6 +67,7 @@ public class GameData {
      */
     public GameData(GameConfig gameConfig) {
 
+        // game id and player ids should of course be generated in the future.
         id = 1L;
         pits = new ArrayList<>();
         currentIndex = 0;

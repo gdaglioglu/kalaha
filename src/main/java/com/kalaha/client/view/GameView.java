@@ -200,8 +200,8 @@ public class GameView extends VerticalLayout implements BeforeEnterObserver {
 
         GameInfo gameInfo = gameData.getGameInfo();
         if (gameInfo.getGameStatus() == GameStatus.FINISHED) {
-            Notification notification = Notification.show("Winner: " + gameInfo.getWinner().getName() +
-                    System.lineSeparator() + "Congratulations!");
+            Player winner = gameInfo.getWinner();
+            Notification notification = Notification.show("Winner: " + ((winner != null) ? winner.getName() : "No winner(Game Drawn!)"));
             notification.setPosition(Notification.Position.TOP_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             notification.setDuration(10000);

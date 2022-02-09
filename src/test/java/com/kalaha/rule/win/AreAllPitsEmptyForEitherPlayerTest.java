@@ -28,13 +28,9 @@ class AreAllPitsEmptyForEitherPlayerTest {
     @Test
     public void whenBothPlayersHaveStonesLeft_gameContinues() {
 
-        GameInfo gameInfo = gameData.getGameInfo();
-        assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
-        assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
-
         areAllPitsEmptyForEitherPlayer.run(gameData);
 
-        gameInfo = gameData.getGameInfo();
+        GameInfo gameInfo = gameData.getGameInfo();
         assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
         assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
     }
@@ -42,18 +38,13 @@ class AreAllPitsEmptyForEitherPlayerTest {
     @Test
     public void whenFirstPlayerHaveNoStonesLeft_gameFinished_firstPlayerWins() {
 
-        GameInfo gameInfo = gameData.getGameInfo();
-        assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
-        assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
-
         List<Pit> pits = gameData.getPits();
-
         pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).forEach(pit -> pit.setStones(0));
         pits.get(6).setStones(40);
 
         areAllPitsEmptyForEitherPlayer.run(gameData);
 
-        gameInfo = gameData.getGameInfo();
+        GameInfo gameInfo = gameData.getGameInfo();
         pits = gameData.getPits();
 
         int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
@@ -70,25 +61,20 @@ class AreAllPitsEmptyForEitherPlayerTest {
     @Test
     public void whenFirstPlayerHaveNoStonesLeft_gameFinished_secondPlayerWins() {
 
-        GameInfo gameInfo = gameData.getGameInfo();
-        assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
-        assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
-
         List<Pit> pits = gameData.getPits();
-
         pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).forEach(pit -> pit.setStones(0));
         pits.get(6).setStones(25);
 
         areAllPitsEmptyForEitherPlayer.run(gameData);
 
-        gameInfo = gameData.getGameInfo();
+        GameInfo gameInfo = gameData.getGameInfo();
         pits = gameData.getPits();
 
         int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
         int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
 
         assertEquals(25, pits.get(6).getStones());
-        assertEquals(0, pits.get(13).getStones());
+        assertEquals(36, pits.get(13).getStones());
         assertEquals(pits.get(6).getStones(), firstPlayersOverallStoneCount);
         assertEquals(36, secondPlayersOverallStoneCount);
         assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
@@ -98,18 +84,13 @@ class AreAllPitsEmptyForEitherPlayerTest {
     @Test
     public void whenSecondPlayerHaveNoStonesLeft_gameFinished_secondPlayerWins() {
 
-        GameInfo gameInfo = gameData.getGameInfo();
-        assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
-        assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
-
         List<Pit> pits = gameData.getPits();
-
         pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).forEach(pit -> pit.setStones(0));
         pits.get(13).setStones(40);
 
         areAllPitsEmptyForEitherPlayer.run(gameData);
 
-        gameInfo = gameData.getGameInfo();
+        GameInfo gameInfo = gameData.getGameInfo();
         pits = gameData.getPits();
 
         int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
@@ -126,29 +107,70 @@ class AreAllPitsEmptyForEitherPlayerTest {
     @Test
     public void whenSecondPlayerHaveNoStonesLeft_gameFinished_firstPlayerWins() {
 
-        GameInfo gameInfo = gameData.getGameInfo();
-        assertEquals(GameStatus.ONGOING, gameInfo.getGameStatus());
-        assertNull(gameInfo.getWinner(), "Game ongoing, winner should not be set!");
-
         List<Pit> pits = gameData.getPits();
-
         pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).forEach(pit -> pit.setStones(0));
         pits.get(13).setStones(25);
 
         areAllPitsEmptyForEitherPlayer.run(gameData);
 
-        gameInfo = gameData.getGameInfo();
+        GameInfo gameInfo = gameData.getGameInfo();
         pits = gameData.getPits();
 
         int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
         int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
 
-        assertEquals(0, pits.get(6).getStones());
+        assertEquals(36, pits.get(6).getStones());
         assertEquals(25, pits.get(13).getStones());
         assertEquals(36, firstPlayersOverallStoneCount);
         assertEquals(pits.get(13).getStones(), secondPlayersOverallStoneCount);
         assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
         assertEquals(firstPlayer, gameInfo.getWinner());
+    }
+
+    @Test
+    public void whenFirstPlayerHaveNoStonesLeft_gameFinished_withDraw() {
+
+        List<Pit> pits = gameData.getPits();
+        pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).forEach(pit -> pit.setStones(0));
+        pits.get(6).setStones(36);
+
+        areAllPitsEmptyForEitherPlayer.run(gameData);
+
+        GameInfo gameInfo = gameData.getGameInfo();
+        pits = gameData.getPits();
+
+        int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
+        int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
+
+        assertEquals(36, pits.get(6).getStones());
+        assertEquals(36, pits.get(13).getStones());
+        assertEquals(36, firstPlayersOverallStoneCount);
+        assertEquals(pits.get(13).getStones(), secondPlayersOverallStoneCount);
+        assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
+        assertNull(gameInfo.getWinner());
+    }
+
+    @Test
+    public void whenSecondPlayerHaveNoStonesLeft_gameFinished_withDraw() {
+
+        List<Pit> pits = gameData.getPits();
+        pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).forEach(pit -> pit.setStones(0));
+        pits.get(13).setStones(36);
+
+        areAllPitsEmptyForEitherPlayer.run(gameData);
+
+        GameInfo gameInfo = gameData.getGameInfo();
+        pits = gameData.getPits();
+
+        int firstPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(firstPlayer)).mapToInt(Pit::getStones).sum();
+        int secondPlayersOverallStoneCount = pits.stream().filter(pit -> pit.getPlayer().equals(secondPlayer)).mapToInt(Pit::getStones).sum();
+
+        assertEquals(36, pits.get(6).getStones());
+        assertEquals(36, pits.get(13).getStones());
+        assertEquals(36, firstPlayersOverallStoneCount);
+        assertEquals(pits.get(13).getStones(), secondPlayersOverallStoneCount);
+        assertEquals(GameStatus.FINISHED, gameInfo.getGameStatus());
+        assertNull(gameInfo.getWinner());
     }
 
 }

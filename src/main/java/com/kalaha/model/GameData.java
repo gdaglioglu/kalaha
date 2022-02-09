@@ -81,19 +81,19 @@ public class GameData {
         int pitSize = gameConfig.getNumberOfPitsPerPlayer() * 2 + 2;
         int firstPlayersKalahaIndex = (pitSize - 2) / 2;
         int secondPlayersKalahaIndex = pitSize - 1;
-        int numberOfStonesPerPit=gameConfig.getNumberOfStonesPerPit();
+        int numberOfStonesPerPit = gameConfig.getNumberOfStonesPerPit();
 
         for (int i = 0; i < pitSize; i++) {
 
             Pit pit = null;
-            if(i < firstPlayersKalahaIndex){
-                 pit = new Pit(firstPlayer, numberOfStonesPerPit);
-            }else if(i == firstPlayersKalahaIndex){
-                 pit = new Kalaha(firstPlayer, 0);
-            }else if(i<secondPlayersKalahaIndex){
+            if (i < firstPlayersKalahaIndex) {
+                pit = new Pit(firstPlayer, numberOfStonesPerPit);
+            } else if (i == firstPlayersKalahaIndex) {
+                pit = new Kalaha(firstPlayer, 0);
+            } else if (i < secondPlayersKalahaIndex) {
                 pit = new Pit(secondPlayer, numberOfStonesPerPit);
-            }else if(i == secondPlayersKalahaIndex){
-                 pit = new Kalaha(secondPlayer, 0);
+            } else if (i == secondPlayersKalahaIndex) {
+                pit = new Kalaha(secondPlayer, 0);
             }
             pits.add(pit);
         }

@@ -36,34 +36,39 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
             playersPitStonesCount.put(player, count + pit.getStones());
         });
 
+        Player playerWithLessStones = Collections.min(playersPitStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
 
-        Player playerWithNoStones = Collections.min(playersPitStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
-
-        if (playersPitStonesCount.get(playerWithNoStones) == 0) {
+        if (playersPitStonesCount.get(playerWithLessStones) == 0) {
 
             Player firstPlayer = gameData.getFirstPlayer();
             Player secondPlayer = gameData.getSecondPlayer();
 
-            Player playerWithStones = firstPlayer.equals(playerWithNoStones) ? secondPlayer : firstPlayer;
+            Player playerWithStones = firstPlayer.equals(playerWithLessStones) ? secondPlayer : firstPlayer;
             playersKalahaStonesCount.put(playerWithStones, playersKalahaStonesCount.get(playerWithStones) + playersPitStonesCount.get(playerWithStones));
-
-            Player winner = Collections.max(playersKalahaStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
-            gameData.getGameInfo().setWinner(winner);
-
-            Player loser = firstPlayer.equals(winner) ? secondPlayer : firstPlayer;
 
             // Sort out loser's pits
             List<Pit> pits = gameData.getPits();
             for (Pit pit : pits) {
-                if (pit.getPlayer().equals(loser)) {
+                if (pit.getPlayer().equals(playerWithStones)) {
                     if (pit instanceof Kalaha) {
-                        pit.setStones(playersKalahaStonesCount.get(loser));
+                        pit.setStones(playersKalahaStonesCount.get(playerWithStones));
                         continue;
                     }
                     pit.setStones(0);
                 }
             }
 
+            int firstPlayersKalahaStonesCount = playersKalahaStonesCount.get(firstPlayer);
+            int secondPlayersKalahaStonesCount = playersKalahaStonesCount.get(secondPlayer);
+
+            if (firstPlayersKalahaStonesCount == secondPlayersKalahaStonesCount) {
+                gameData.getGameInfo().setWinner(null);
+                log.info("Game completed - It's a draw!");
+                return;
+            }
+
+            Player winner = Collections.max(playersKalahaStonesCount.entrySet(), Map.Entry.comparingByValue()).getKey();
+            gameData.getGameInfo().setWinner(winner);
             log.info("Game completed - Winner: {}", winner);
             return;
         }

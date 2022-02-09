@@ -1,21 +1,15 @@
 package com.kalaha.rule.play;
 
 import com.kalaha.model.*;
-import com.kalaha.rule.input.IsValidPitRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 /**
  * Rule implementation to determine which user to play next.
  */
+@Slf4j
 public class DeterminePlayerTurnRule implements PlayRule {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(DeterminePlayerTurnRule.class);
 
     /**
      * {@inheritDoc}
@@ -36,6 +30,6 @@ public class DeterminePlayerTurnRule implements PlayRule {
             turnInfo.flipTurn();
         }
 
-        logger.info("Turn decision: {}", turnInfo.getToPlay());
+        log.info("Turn decision: {}", turnInfo.getToPlay());
     }
 }

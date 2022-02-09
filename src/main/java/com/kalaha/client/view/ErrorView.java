@@ -10,21 +10,16 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Custom error page to be displayed in case of an error occurs, e.g. display game page is requested before creating the game etc.
  */
 @PageTitle("Error occurred!")
 @Route("/error")
+@Slf4j
 @Theme(value = Lumo.class)
 public class ErrorView extends HorizontalLayout {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(ErrorView.class);
 
     /**
      * Constructor for the custom error page.
@@ -41,6 +36,6 @@ public class ErrorView extends HorizontalLayout {
         layout.add(errorLabel, newGameButton);
         add(layout);
 
-        logger.debug("Error view initialized");
+        log.debug("Error view initialized");
     }
 }

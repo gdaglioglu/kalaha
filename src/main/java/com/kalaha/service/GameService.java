@@ -3,21 +3,16 @@ package com.kalaha.service;
 import com.kalaha.model.GameConfig;
 import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * The service that manages the creation and play of the game.
  */
+@Slf4j
 @Service
 public class GameService {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
     /**
      * The reference to the game.
@@ -31,6 +26,7 @@ public class GameService {
 
     /**
      * Constructor for this service.
+     *
      * @param gameFactory the factory to create games.
      */
     @Autowired
@@ -48,7 +44,7 @@ public class GameService {
 
         game = gameFactory.createGame(gameConfig);
         GameData gameData = game.getGameData();
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
 
         return gameData;
     }
@@ -62,27 +58,27 @@ public class GameService {
     public GameData play(PlayData playData) {
 
         GameData gameData = game.playTurn(playData);
-        logger.debug("Turn played: {}", gameData);
+        log.debug("Turn played: {}", gameData);
         return gameData;
     }
 
     /**
      * Retrieves the game data. Note that id is ignored at the moment.
-     * @id identifier of the game.
      *
+     * @param id identifier of the game.
      * @return the data that represents the game.
      */
     public GameData getGame(Long id) {
 
-        logger.debug("Game requested: id = {}", id);
+        log.debug("Game requested: id = {}", id);
 
         if (this.game == null) {
-            logger.error("Game not initialised");
+            log.error("Game not initialised");
             return null;
         }
 
         GameData gameData = game.getGameData();
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 }

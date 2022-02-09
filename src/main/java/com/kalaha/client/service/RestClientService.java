@@ -3,8 +3,7 @@ package com.kalaha.client.service;
 import com.kalaha.client.dto.GameConfig;
 import com.kalaha.client.dto.GameData;
 import com.kalaha.client.dto.PlayData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,13 +19,9 @@ import java.net.URI;
  * {@link #createGame(GameConfig)}, {@link #getGameData(long)} and {@link #sendPlayData(PlayData)} uses a DTO class to map the JSON results from API.
  * It fetches all available results immediately.
  */
+@Slf4j
 @Service
 public class RestClientService {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(RestClientService.class);
 
     /**
      * The port changes depending on where we deploy the app
@@ -72,7 +67,7 @@ public class RestClientService {
 
         HttpEntity<GameConfig> request = new HttpEntity<>(gameConfig);
         URI locationHeader = restTemplate.postForLocation(serverHost + serverPort + endPoint, request);
-        logger.debug("Game created: {}", locationHeader);
+        log.debug("Game created: {}", locationHeader);
         return locationHeader;
     }
 
@@ -84,7 +79,7 @@ public class RestClientService {
     public GameData getGameData(long id) {
 
         GameData gameData = restTemplate.getForObject(serverHost + serverPort + endPoint + "/" + id, GameData.class);
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 
@@ -96,11 +91,11 @@ public class RestClientService {
      */
     public GameData sendPlayData(PlayData playData) {
 
-        logger.debug("Play data sent: {}", playData);
+        log.debug("Play data sent: {}", playData);
         HttpEntity<PlayData> requestUpdate = new HttpEntity<>(playData);
         ResponseEntity<GameData> responseEntity = restTemplate.exchange(serverHost + serverPort + endPoint, HttpMethod.PUT, requestUpdate, GameData.class);
         GameData gameData = responseEntity.getBody();
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 

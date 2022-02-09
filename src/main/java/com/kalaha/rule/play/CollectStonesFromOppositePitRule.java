@@ -1,22 +1,16 @@
 package com.kalaha.rule.play;
 
 import com.kalaha.model.*;
-import com.kalaha.rule.input.IsValidPitRule;
 import com.kalaha.util.PitUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 /**
  * Rule implementation for a user to collect opponent's stones and move them to their kalaha.
  */
+@Slf4j
 public class CollectStonesFromOppositePitRule implements PlayRule {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(CollectStonesFromOppositePitRule.class);
 
     /**
      * {@inheritDoc}
@@ -45,7 +39,7 @@ public class CollectStonesFromOppositePitRule implements PlayRule {
             playersKalaha.setStones(playersKalaha.getStones() + stoneCount);
             gameData.setCurrentIndex(pits.indexOf(playersKalaha));
 
-            logger.info("Stones collected from opposite pit for {}", playData);
+            log.info("Stones collected from opposite pit for {}", playData);
         }
 
 

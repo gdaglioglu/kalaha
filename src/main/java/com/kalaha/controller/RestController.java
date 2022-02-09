@@ -4,8 +4,7 @@ import com.kalaha.model.GameConfig;
 import com.kalaha.model.GameData;
 import com.kalaha.model.PlayData;
 import com.kalaha.service.GameService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,14 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Rest controller that exposes APIs to control game logic.
  */
+@Slf4j
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/game")
 public class RestController {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(RestController.class);
 
     /**
      * The game endpoint
@@ -72,15 +67,15 @@ public class RestController {
     @ResponseStatus(HttpStatus.OK)
     public GameData getGame(@PathVariable long id) {
 
-        logger.debug("Game requested: id = {}", id);
+        log.debug("Game requested: id = {}", id);
 
         GameData gameData = gameService.getGame(id);
 
         if (gameData == null) {
-            logger.error("Game not initialized!");
+            log.error("Game not initialized!");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game is not initialized, please create a game first");
         }
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
 
         return gameData;
     }
@@ -95,7 +90,7 @@ public class RestController {
     public GameData play(@RequestBody PlayData input) {
 
         GameData gameData = gameService.play(input);
-        logger.debug("Game retrieved: {}", gameData);
+        log.debug("Game retrieved: {}", gameData);
         return gameData;
     }
 }

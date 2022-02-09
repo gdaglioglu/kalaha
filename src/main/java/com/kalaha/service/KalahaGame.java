@@ -13,8 +13,7 @@ import com.kalaha.rule.play.PlayRule;
 import com.kalaha.rule.win.AreAllPitsEmptyForEitherPlayer;
 import com.kalaha.rule.win.WinRule;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,8 @@ import java.util.List;
 /**
  * Represents a kalaha game.
  */
+@Slf4j
 public class KalahaGame extends Game {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(KalahaGame.class);
 
     /**
      * Anything about game state.
@@ -61,7 +56,7 @@ public class KalahaGame extends Game {
         gameConfig.setRules(gameRules);
 
         this.gameData = new GameData(gameConfig);
-        logger.info("Kalaha game is initialized with {} pits and {} stones per pit",
+        log.info("Kalaha game is initialized with {} pits and {} stones per pit",
                 gameConfig.getNumberOfPitsPerPlayer(), gameConfig.getNumberOfStonesPerPit());
     }
 

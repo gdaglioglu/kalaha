@@ -1,8 +1,7 @@
 package com.kalaha.rule.win;
 
 import com.kalaha.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,12 +11,8 @@ import java.util.Map;
 /**
  * Rule implementation to check if game is finished and establish winner.
  */
+@Slf4j
 public class AreAllPitsEmptyForEitherPlayer implements WinRule {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(AreAllPitsEmptyForEitherPlayer.class);
 
     /**
      * {@inheritDoc}
@@ -69,9 +64,9 @@ public class AreAllPitsEmptyForEitherPlayer implements WinRule {
                 }
             }
 
-            logger.info("Game completed - Winner: {}", winner);
+            log.info("Game completed - Winner: {}", winner);
             return;
         }
-        logger.info("Game ongoing");
+        log.info("Game ongoing");
     }
 }

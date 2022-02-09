@@ -15,8 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -28,13 +27,9 @@ import java.util.List;
  */
 @PageTitle("Let's play!")
 @Route("/kalaha/:id([0-9]*)")
+@Slf4j
 @Theme(value = Lumo.class)
 public class GameView extends VerticalLayout implements BeforeEnterObserver {
-
-    /**
-     * Logger instance.
-     */
-    public static final Logger logger = LoggerFactory.getLogger(GameView.class);
 
     /**
      * The layout to store first player's non-kalaha pits.
@@ -95,7 +90,7 @@ public class GameView extends VerticalLayout implements BeforeEnterObserver {
         setHorizontalComponentAlignment(Alignment.CENTER, secondPlayerName, pitBoardLayout, firstPlayerName, restartButton);
         addPlayerPits(gameData, service);
 
-        logger.debug("Game view initialized: id = {}", gameId);
+        log.debug("Game view initialized: id = {}", gameId);
     }
 
     /**
@@ -176,7 +171,7 @@ public class GameView extends VerticalLayout implements BeforeEnterObserver {
                 String violationMessage = String.join(System.lineSeparator(), violation.getMessage());
                 Notification notification = Notification.show(violationMessage);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                logger.error("Input violation occurred: {}", violationMessage);
+                log.error("Input violation occurred: {}", violationMessage);
             }
             refreshView(updatedGameData);
         };
@@ -213,7 +208,7 @@ public class GameView extends VerticalLayout implements BeforeEnterObserver {
             buttonList.forEach(button -> button.setEnabled(false));
         }
 
-        logger.debug("Game view refreshed: {}", gameData);
+        log.debug("Game view refreshed: {}", gameData);
     }
 
     /**
